@@ -7,10 +7,20 @@ interface CollectionsSectionProps {
 }
 
 function pluralizeTraditions(count: number, locale: string): string {
-  if (locale === "es") {
-    return count === 1 ? "1 tradición" : `${count} tradiciones`;
-  }
-  return count === 1 ? "1 tradition" : `${count} traditions`;
+  const labels: Record<string, [string, string]> = {
+    en: ["tradition", "traditions"],
+    es: ["tradición", "tradiciones"],
+    pt: ["tradição", "tradições"],
+    fr: ["tradition", "traditions"],
+    de: ["Tradition", "Traditionen"],
+    ar: ["تقليد", "تقاليد"],
+    hi: ["परंपरा", "परंपराएँ"],
+    zh: ["个传统", "个传统"],
+    ja: ["つの伝統", "つの伝統"],
+    he: ["מסורת", "מסורות"],
+  };
+  const [singular, plural] = labels[locale] ?? labels["en"]!;
+  return `${count} ${count === 1 ? singular : plural}`;
 }
 
 export function CollectionsSection({

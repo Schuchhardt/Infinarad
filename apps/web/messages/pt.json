@@ -1,0 +1,15 @@
+{
+  "common": {
+    "appName": "Infinarad",
+    "tagline": "Como a humanidade responde às grandes questões",
+    "description": "Uma exploração documentada, citada e multilíngue de como cada tradição respondeu às questões que nos definem.",
+    "loading": "Carregando...",
+    "error": "Algo deu errado",
+    "notFound": "Página não encontrada",
+    "backHome": "Voltar ao início"
+  },
+  "landing": {
+    "questionsTitle": "As Perguntas",
+    "collectionsTitle": "As Coleções"
+  }
+}

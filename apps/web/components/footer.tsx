@@ -4,10 +4,19 @@ interface FooterProps {
 
 export function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear();
-  const desc =
-    locale === "es"
-      ? "Documentamos cómo la humanidad ha respondido las grandes preguntas. Sin conclusiones."
-      : "Documenting how humanity has answered the great questions. No conclusions.";
+  const descs: Record<string, string> = {
+    en: "Documenting how humanity has answered the great questions. No conclusions.",
+    es: "Documentamos cómo la humanidad ha respondido las grandes preguntas. Sin conclusiones.",
+    pt: "Documentando como a humanidade respondeu às grandes questões. Sem conclusões.",
+    fr: "Documenter comment l'humanité a répondu aux grandes questions. Sans conclusions.",
+    de: "Dokumentieren, wie die Menschheit die großen Fragen beantwortet hat. Ohne Schlussfolgerungen.",
+    ar: "نوثّق كيف أجابت البشرية على الأسئلة الكبرى. بلا استنتاجات.",
+    hi: "मानवता ने महान प्रश्नों का उत्तर कैसे दिया, इसका प्रलेखन। कोई निष्कर्ष नहीं।",
+    zh: "记录人类如何回答伟大的问题。不下结论。",
+    ja: "人類がいかにして大いなる問いに答えてきたかを記録する。結論なし。",
+    he: "מתעדים כיצד האנושות ענתה על השאלות הגדולות. ללא מסקנות.",
+  };
+  const desc = descs[locale] ?? descs["en"]!;
 
   return (
     <footer className="border-t border-parchment/8 px-6 py-16">

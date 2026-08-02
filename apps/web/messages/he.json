@@ -1,0 +1,15 @@
+{
+  "common": {
+    "appName": "Infinarad",
+    "tagline": "כיצד האנושות עונה על השאלות הגדולות",
+    "description": "חקירה מתועדת, מצוטטת ורב-לשונית של האופן שבו כל מסורת ענתה על השאלות שמגדירות אותנו.",
+    "loading": "טוען...",
+    "error": "משהו השתבש",
+    "notFound": "הדף לא נמצא",
+    "backHome": "חזרה לדף הבית"
+  },
+  "landing": {
+    "questionsTitle": "השאלות",
+    "collectionsTitle": "האוספים"
+  }
+}

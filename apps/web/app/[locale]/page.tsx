@@ -13,6 +13,7 @@ import {
   getHeroSubtitle,
   getTheRule,
   getHowItWorksTitle,
+  getActiveLocales,
 } from "@/lib/data";
 import { getTranslations } from "next-intl/server";
 
@@ -23,23 +24,20 @@ type Props = {
 const BASE_URL =
   process.env["NEXT_PUBLIC_SITE_URL"] ?? "https://infinarad.com";
 
-const ACTIVE_LOCALES = [
-  { code: "en", name: "English" },
-  { code: "es", name: "Español" },
-];
-
 export default async function LandingPage({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "landing" });
   const tc = await getTranslations({ locale, namespace: "common" });
 
-  const [questions, collections, subtitle, rule, howTitle] = await Promise.all([
-    getQuestions(locale),
-    getCollections(locale),
-    getHeroSubtitle(locale),
-    getTheRule(locale),
-    getHowItWorksTitle(locale),
-  ]);
+  const [questions, collections, subtitle, rule, howTitle, activeLocales] =
+    await Promise.all([
+      getQuestions(locale),
+      getCollections(locale),
+      getHeroSubtitle(locale),
+      getTheRule(locale),
+      getHowItWorksTitle(locale),
+      getActiveLocales(),
+    ]);
 
   const questionTitle =
     questions.find((q) => q.id === "q_DEATH")?.title ??
@@ -65,7 +63,7 @@ export default async function LandingPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Nav locale={locale} locales={ACTIVE_LOCALES} />
+      <Nav locale={locale} locales={activeLocales} />
       <main>
         <Hero questionTitle={questionTitle} subtitle={subtitle} />
         <QuestionsSection

@@ -31,6 +31,28 @@ async function safeQuery<T>(fn: () => Promise<T>, fallback: any): Promise<T> {
   }
 }
 
+export interface LocaleData {
+  code: string;
+  name: string;
+  direction: string;
+}
+
+export async function getActiveLocales(): Promise<LocaleData[]> {
+  return safeQuery(
+    () =>
+      sql<LocaleData[]>`
+        SELECT code, name_native AS name, direction
+        FROM locale
+        WHERE is_active = true
+        ORDER BY sort_order
+      `,
+    [
+      { code: "en", name: "English", direction: "ltr" },
+      { code: "es", name: "Español", direction: "ltr" },
+    ],
+  );
+}
+
 export async function getQuestions(locale: string): Promise<QuestionData[]> {
   return safeQuery(
     () =>

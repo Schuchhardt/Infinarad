@@ -40,18 +40,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     openGraph: {
       type: "website",
-      locale: locale === "es" ? "es_ES" : "en_US",
+      locale,
       siteName: t("appName"),
     },
   };
 }
 
+const RTL_LOCALES = new Set(["ar", "he"]);
+
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
   const messages = await getMessages();
+  const dir = RTL_LOCALES.has(locale) ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir="ltr" className="antialiased">
+    <html lang={locale} dir={dir} className="antialiased">
       <head>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>

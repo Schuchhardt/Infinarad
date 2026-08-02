@@ -1,0 +1,15 @@
+{
+  "common": {
+    "appName": "Infinarad",
+    "tagline": "人类如何回答伟大的问题",
+    "description": "一项有据可查、引用翔实的多语言探索，展示每个传统如何回答定义我们的问题。",
+    "loading": "加载中...",
+    "error": "出了点问题",
+    "notFound": "页面未找到",
+    "backHome": "返回首页"
+  },
+  "landing": {
+    "questionsTitle": "问题",
+    "collectionsTitle": "合集"
+  }
+}

@@ -12,15 +12,34 @@ export default async function OGImage({
 }) {
   const { locale } = await params;
 
-  const tagline =
-    locale === "es"
-      ? "Cómo la humanidad responde las grandes preguntas"
-      : "How humanity answers the great questions";
+  const taglines: Record<string, string> = {
+    en: "How humanity answers the great questions",
+    es: "Cómo la humanidad responde las grandes preguntas",
+    pt: "Como a humanidade responde às grandes questões",
+    fr: "Comment l'humanité répond aux grandes questions",
+    de: "Wie die Menschheit die großen Fragen beantwortet",
+    ar: "كيف تجيب البشرية على الأسئلة الكبرى",
+    hi: "मानवता महान प्रश्नों का उत्तर कैसे देती है",
+    zh: "人类如何回答伟大的问题",
+    ja: "人類はいかにして大いなる問いに答えてきたか",
+    he: "כיצד האנושות עונה על השאלות הגדולות",
+  };
 
-  const subtitle =
-    locale === "es"
-      ? "Documentado. Citado. Sin conclusiones."
-      : "Documented. Cited. No conclusions.";
+  const subtitles: Record<string, string> = {
+    en: "Documented. Cited. No conclusions.",
+    es: "Documentado. Citado. Sin conclusiones.",
+    pt: "Documentado. Citado. Sem conclusões.",
+    fr: "Documenté. Cité. Sans conclusions.",
+    de: "Dokumentiert. Zitiert. Ohne Schlussfolgerungen.",
+    ar: "موثّق. مُستشهَد. بلا استنتاجات.",
+    hi: "प्रलेखित। उद्धृत। कोई निष्कर्ष नहीं।",
+    zh: "有据可查。引用翔实。不下结论。",
+    ja: "文献に基づく。引用を明示。結論なし。",
+    he: "מתועד. מצוטט. ללא מסקנות.",
+  };
+
+  const tagline = taglines[locale] ?? taglines["en"]!;
+  const subtitle = subtitles[locale] ?? subtitles["en"]!;
 
   return new ImageResponse(
     (
