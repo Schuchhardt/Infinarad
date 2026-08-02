@@ -1,0 +1,20 @@
+{
+  "name": "infinarad-platform",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm --filter @infinarad/web dev",
+    "lint": "pnpm -r lint",
+    "test": "vitest",
+    "test:e2e": "pnpm --filter @infinarad/web test:e2e",
+    "clean": "pnpm -r clean",
+    "db:migrate": "pnpm --filter @infinarad/db db:migrate",
+    "db:seed": "pnpm --filter @infinarad/db db:seed",
+    "db:reset": "pnpm --filter @infinarad/db db:reset",
+    "db:studio": "pnpm --filter @infinarad/db db:studio"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.1"
+  }
+}
