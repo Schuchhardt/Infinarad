@@ -3,11 +3,20 @@ import type { CollectionData } from "@/lib/data";
 interface CollectionsSectionProps {
   collections: CollectionData[];
   sectionTitle: string;
+  locale: string;
+}
+
+function pluralizeTraditions(count: number, locale: string): string {
+  if (locale === "es") {
+    return count === 1 ? "1 tradición" : `${count} tradiciones`;
+  }
+  return count === 1 ? "1 tradition" : `${count} traditions`;
 }
 
 export function CollectionsSection({
   collections,
   sectionTitle,
+  locale,
 }: CollectionsSectionProps) {
   return (
     <section className="px-6 py-32" aria-labelledby="collections-heading">
@@ -29,8 +38,7 @@ export function CollectionsSection({
                 {col.name}
               </h3>
               <p className="mt-2 font-mono text-xs text-muted">
-                {col.tradition_count}{" "}
-                {col.tradition_count === 1 ? "tradition" : "traditions"}
+                {pluralizeTraditions(col.tradition_count, locale)}
               </p>
             </div>
           ))}

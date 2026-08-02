@@ -20,6 +20,9 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
+const BASE_URL =
+  process.env["NEXT_PUBLIC_SITE_URL"] ?? "https://infinarad.com";
+
 const ACTIVE_LOCALES = [
   { code: "en", name: "English" },
   { code: "es", name: "Español" },
@@ -28,6 +31,7 @@ const ACTIVE_LOCALES = [
 export default async function LandingPage({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "landing" });
+  const tc = await getTranslations({ locale, namespace: "common" });
 
   const [questions, collections, subtitle, rule, howTitle] = await Promise.all([
     getQuestions(locale),
@@ -41,8 +45,26 @@ export default async function LandingPage({ params }: Props) {
     questions.find((q) => q.id === "q_DEATH")?.title ??
     "What happens after death?";
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: tc("appName"),
+    description: tc("description"),
+    url: `${BASE_URL}/${locale}`,
+    inLanguage: locale,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${BASE_URL}/${locale}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Nav locale={locale} locales={ACTIVE_LOCALES} />
       <main>
         <Hero questionTitle={questionTitle} subtitle={subtitle} />
@@ -54,6 +76,7 @@ export default async function LandingPage({ params }: Props) {
         <CollectionsSection
           collections={collections}
           sectionTitle={t("collectionsTitle")}
+          locale={locale}
         />
         <TheRule title={rule.title} body={rule.body} />
       </main>

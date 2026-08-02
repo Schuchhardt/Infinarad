@@ -15,8 +15,14 @@ CREATE TABLE translation (
 );
 
 CREATE INDEX translation_lookup ON translation (entity_type, entity_id, locale);
+
+CREATE OR REPLACE FUNCTION immutable_unaccent(text)
+RETURNS text
+LANGUAGE sql IMMUTABLE PARALLEL SAFE STRICT
+AS $$ SELECT unaccent($1) $$;
+
 CREATE INDEX translation_fts ON translation
-  USING gin (to_tsvector('simple', unaccent(value)));
+  USING gin (to_tsvector('simple', immutable_unaccent(value)));
 
 CREATE TABLE slug_redirect (
   locale     text NOT NULL REFERENCES locale(code),

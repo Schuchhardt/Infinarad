@@ -262,3 +262,10 @@ CREATE POLICY translator_write_translation ON translation
 -- Anyone can insert suggestions
 CREATE POLICY public_insert_suggestion ON suggestion
   FOR INSERT WITH CHECK (true);
+
+-- Table-level grants for RLS to take effect
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO authenticated;
+GRANT INSERT ON suggestion TO anon;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO authenticated;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated;
