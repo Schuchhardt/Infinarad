@@ -7,6 +7,7 @@ import { CollectionsSection } from "@/components/collections-section";
 import { TheRule } from "@/components/the-rule";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { SearchBar } from "@/components/search-bar";
 import {
   getQuestions,
   getCollections,
@@ -16,6 +17,19 @@ import {
   getActiveLocales,
 } from "@/lib/data";
 import { getTranslations } from "next-intl/server";
+
+const SEARCH_PLACEHOLDERS: Record<string, string> = {
+  en: "Search a question...",
+  es: "Buscar una pregunta...",
+  pt: "Buscar uma pergunta...",
+  fr: "Rechercher une question...",
+  de: "Eine Frage suchen...",
+  ar: "ابحث عن سؤال...",
+  hi: "एक प्रश्न खोजें...",
+  zh: "搜索问题...",
+  ja: "問いを検索...",
+  he: "חפש שאלה...",
+};
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -66,6 +80,16 @@ export default async function LandingPage({ params }: Props) {
       <Nav locale={locale} locales={activeLocales} />
       <main>
         <Hero questionTitle={questionTitle} subtitle={subtitle} />
+        <section className="px-6 py-16">
+          <SearchBar
+            locale={locale}
+            placeholder={SEARCH_PLACEHOLDERS[locale] ?? SEARCH_PLACEHOLDERS["en"]!}
+            suggestions={questions.map((q) => ({
+              slug: q.slug,
+              title: q.title,
+            }))}
+          />
+        </section>
         <QuestionsSection
           questions={questions}
           sectionTitle={t("questionsTitle")}

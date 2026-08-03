@@ -1,4 +1,5 @@
 import type { QuestionData } from "@/lib/data";
+import { Link } from "@/i18n/navigation";
 
 interface QuestionsSectionProps {
   questions: QuestionData[];
@@ -22,7 +23,10 @@ export function QuestionsSection({
         <ol className="space-y-12 list-none p-0 m-0">
           {questions.map((q, i) => (
             <li key={q.id} className="group">
-              <div className="flex items-baseline gap-6">
+              <Link
+                href={`/question/${q.slug}`}
+                className="flex items-baseline gap-6"
+              >
                 <span
                   className="font-mono text-xs text-muted/60 tabular-nums"
                   aria-hidden="true"
@@ -31,7 +35,7 @@ export function QuestionsSection({
                 </span>
                 <div>
                   <h2
-                    className="font-display text-2xl leading-snug text-parchment md:text-4xl"
+                    className="font-display text-2xl leading-snug text-parchment group-hover:text-gold transition-colors md:text-4xl"
                     lang={q.is_fallback ? "en" : undefined}
                   >
                     {q.title}
@@ -48,7 +52,7 @@ export function QuestionsSection({
                     {q.summary}
                   </p>
                 </div>
-              </div>
+              </Link>
             </li>
           ))}
         </ol>
