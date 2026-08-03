@@ -11,7 +11,8 @@
     "db:migrate": "pnpm --filter @infinarad/db db:migrate",
     "db:seed": "pnpm --filter @infinarad/db db:seed",
     "db:reset": "pnpm --filter @infinarad/db db:reset",
-    "db:studio": "pnpm --filter @infinarad/db db:studio"
+    "db:studio": "pnpm --filter @infinarad/db db:studio",
+    "research": "tsx scripts/research.ts"
   },
   "devDependencies": {
     "typescript": "^5.8.3",

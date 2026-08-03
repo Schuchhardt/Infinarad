@@ -28,6 +28,9 @@ Thumbs.db
 # test
 coverage/
 
+# research output
+research-output/
+
 # misc
 *.log
 *.tsbuildinfo
