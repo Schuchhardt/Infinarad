@@ -1,8 +1,8 @@
 {
   "common": {
     "appName": "Infinarad",
-    "tagline": "Comment l'humanité répond aux grandes questions",
-    "description": "Une exploration documentée, citée et multilingue de la façon dont chaque tradition a répondu aux questions qui nous définissent.",
+    "tagline": "L'Atlas Vivant des Plus Grandes Questions de l'Humanité",
+    "description": "Explorez 5 000 ans de pensée humaine. Chaque civilisation a posé les mêmes questions — découvrez comment elles y ont répondu.",
     "loading": "Chargement...",
     "error": "Une erreur est survenue",
     "notFound": "Page non trouvée",

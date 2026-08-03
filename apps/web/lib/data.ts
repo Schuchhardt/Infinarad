@@ -197,3 +197,105 @@ export async function getHowItWorksTitle(locale: string): Promise<string> {
     return fallback[0]?.value ?? "How It Works";
   }, locale === "es" ? "Cómo Funciona" : "How It Works");
 }
+
+export interface PlatformStats {
+  traditions: number;
+  concepts: number;
+  sources: number;
+  authors: number;
+}
+
+export async function getPlatformStats(): Promise<PlatformStats> {
+  return safeQuery(async () => {
+    const rows = await sql<{ entity: string; count: number }[]>`
+      SELECT 'traditions' AS entity, count(*)::int AS count FROM tradition WHERE status = 'published'
+      UNION ALL SELECT 'concepts', count(*)::int FROM concept WHERE status = 'published'
+      UNION ALL SELECT 'sources', count(*)::int FROM source
+      UNION ALL SELECT 'authors', count(*)::int FROM author WHERE status = 'published'
+    `;
+    const map = Object.fromEntries(rows.map((r) => [r.entity, r.count]));
+    return {
+      traditions: map["traditions"] ?? 0,
+      concepts: map["concepts"] ?? 0,
+      sources: map["sources"] ?? 0,
+      authors: map["authors"] ?? 0,
+    };
+  }, { traditions: 0, concepts: 0, sources: 0, authors: 0 });
+}
+
+export interface FeaturedQuestionStats {
+  id: string;
+  slug: string;
+  title: string;
+  tradition_count: number;
+  concept_count: number;
+  source_count: number;
+  author_count: number;
+  work_count: number;
+}
+
+export async function getFeaturedQuestionStats(questionId: string, locale: string): Promise<FeaturedQuestionStats | null> {
+  return safeQuery(async () => {
+    const qRows = await sql<{ id: string; slug: string; title: string }[]>`
+      SELECT q.id, q.slug,
+        COALESCE(t.value, t_en.value, q.slug) AS title
+      FROM question q
+      LEFT JOIN translation t ON t.entity_type = 'question' AND t.entity_id = q.id
+        AND t.locale = ${locale} AND t.field = 'title'
+      LEFT JOIN translation t_en ON t_en.entity_type = 'question' AND t_en.entity_id = q.id
+        AND t_en.locale = 'en' AND t_en.field = 'title'
+      WHERE q.id = ${questionId} AND q.status = 'published'
+    `;
+    if (!qRows[0]) return null;
+
+    const countRows = await sql<{ entity: string; count: number }[]>`
+      SELECT 'traditions' AS entity, count(DISTINCT t.id)::int AS count
+      FROM edge e1
+      JOIN concept c ON c.id = e1.to_id AND c.status = 'published'
+      JOIN edge e2 ON e2.from_type = 'concept' AND e2.from_id = c.id
+        AND e2.to_type = 'tradition' AND e2.approved_at IS NOT NULL
+      JOIN tradition t ON t.id = e2.to_id AND t.status = 'published'
+      WHERE e1.from_type = 'question' AND e1.from_id = ${questionId}
+        AND e1.to_type = 'concept' AND e1.approved_at IS NOT NULL
+      UNION ALL
+      SELECT 'concepts', count(DISTINCT c.id)::int
+      FROM edge e JOIN concept c ON c.id = e.to_id AND c.status = 'published'
+      WHERE e.from_type = 'question' AND e.from_id = ${questionId}
+        AND e.to_type = 'concept' AND e.approved_at IS NOT NULL
+      UNION ALL
+      SELECT 'sources', count(DISTINCT s.id)::int
+      FROM living_page lp
+      JOIN living_page_citation lpc ON lpc.living_page_id = lp.id
+      JOIN citation ct ON ct.id = lpc.citation_id
+      JOIN source s ON s.id = ct.source_id
+      WHERE lp.question_id = ${questionId} AND lp.status = 'published'
+      UNION ALL
+      SELECT 'authors', count(DISTINCT a.id)::int
+      FROM edge e1
+      JOIN concept c ON c.id = e1.to_id AND c.status = 'published'
+      JOIN edge e2 ON e2.from_type = 'concept' AND e2.from_id = c.id
+        AND e2.to_type = 'tradition' AND e2.approved_at IS NOT NULL
+      JOIN author a ON a.tradition_id = e2.to_id AND a.status = 'published'
+      WHERE e1.from_type = 'question' AND e1.from_id = ${questionId}
+        AND e1.to_type = 'concept' AND e1.approved_at IS NOT NULL
+      UNION ALL
+      SELECT 'works', count(DISTINCT w.id)::int
+      FROM edge e1
+      JOIN concept c ON c.id = e1.to_id AND c.status = 'published'
+      JOIN edge e2 ON e2.from_type = 'concept' AND e2.from_id = c.id
+        AND e2.to_type = 'tradition' AND e2.approved_at IS NOT NULL
+      JOIN work w ON w.tradition_id = e2.to_id AND w.status = 'published'
+      WHERE e1.from_type = 'question' AND e1.from_id = ${questionId}
+        AND e1.to_type = 'concept' AND e1.approved_at IS NOT NULL
+    `;
+    const cmap = Object.fromEntries(countRows.map((r) => [r.entity, r.count]));
+    return {
+      ...qRows[0],
+      tradition_count: cmap["traditions"] ?? 0,
+      concept_count: cmap["concepts"] ?? 0,
+      source_count: cmap["sources"] ?? 0,
+      author_count: cmap["authors"] ?? 0,
+      work_count: cmap["works"] ?? 0,
+    };
+  }, null);
+}

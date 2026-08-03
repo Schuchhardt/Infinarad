@@ -1,8 +1,8 @@
 {
   "common": {
     "appName": "Infinarad",
-    "tagline": "人类如何回答伟大的问题",
-    "description": "一项有据可查、引用翔实的多语言探索，展示每个传统如何回答定义我们的问题。",
+    "tagline": "人类最大问题的活地图集",
+    "description": "探索5000年人类思想。每个文明都问过同样的问题——看看他们如何回答。",
     "loading": "加载中...",
     "error": "出了点问题",
     "notFound": "页面未找到",

@@ -6,6 +6,15 @@ interface CollectionsSectionProps {
   locale: string;
 }
 
+const COLLECTION_ICONS: Record<string, string> = {
+  "col_DHARMIC": "🕉",
+  "col_ABRAHAMIC": "☽",
+  "col_CLASSICAL": "⚡",
+  "col_EAST_ASIAN": "☯",
+  "col_INDIGENOUS": "🌿",
+  "col_MODERN": "🔬",
+};
+
 function pluralizeTraditions(count: number, locale: string): string {
   const labels: Record<string, [string, string]> = {
     en: ["tradition", "traditions"],
@@ -42,12 +51,15 @@ export function CollectionsSection({
           {collections.map((col) => (
             <div
               key={col.id}
-              className="group rounded-sm border border-parchment/8 bg-ink-light/50 p-6 transition-colors hover:border-gold/30"
+              className="group rounded-sm border border-parchment/8 bg-ink-light/50 p-8 transition-colors hover:border-gold/30"
             >
-              <h3 className="font-display text-lg text-parchment">
+              <p className="mb-4 text-3xl" aria-hidden="true">
+                {COLLECTION_ICONS[col.id] ?? "◈"}
+              </p>
+              <h3 className="font-display text-xl text-parchment md:text-2xl">
                 {col.name}
               </h3>
-              <p className="mt-2 font-mono text-xs text-muted">
+              <p className="mt-3 font-mono text-xs text-muted">
                 {pluralizeTraditions(col.tradition_count, locale)}
               </p>
             </div>

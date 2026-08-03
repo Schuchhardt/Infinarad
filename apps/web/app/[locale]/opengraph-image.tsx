@@ -13,29 +13,29 @@ export default async function OGImage({
   const { locale } = await params;
 
   const taglines: Record<string, string> = {
-    en: "How humanity answers the great questions",
-    es: "Cómo la humanidad responde las grandes preguntas",
-    pt: "Como a humanidade responde às grandes questões",
-    fr: "Comment l'humanité répond aux grandes questions",
-    de: "Wie die Menschheit die großen Fragen beantwortet",
-    ar: "كيف تجيب البشرية على الأسئلة الكبرى",
-    hi: "मानवता महान प्रश्नों का उत्तर कैसे देती है",
-    zh: "人类如何回答伟大的问题",
-    ja: "人類はいかにして大いなる問いに答えてきたか",
-    he: "כיצד האנושות עונה על השאלות הגדולות",
+    en: "The Living Atlas of Humanity's Biggest Questions",
+    es: "El Atlas Vivo de las Grandes Preguntas de la Humanidad",
+    pt: "O Atlas Vivo das Maiores Questões da Humanidade",
+    fr: "L'Atlas Vivant des Plus Grandes Questions de l'Humanité",
+    de: "Der Lebendige Atlas der Größten Fragen der Menschheit",
+    ar: "الأطلس الحي لأكبر أسئلة البشرية",
+    hi: "मानवता के सबसे बड़े प्रश्नों का जीवित मानचित्र",
+    zh: "人类最大问题的活地图集",
+    ja: "人類の最大の問いの生きた地図帳",
+    he: "האטלס החי של השאלות הגדולות של האנושות",
   };
 
   const subtitles: Record<string, string> = {
-    en: "Documented. Cited. No conclusions.",
-    es: "Documentado. Citado. Sin conclusiones.",
-    pt: "Documentado. Citado. Sem conclusões.",
-    fr: "Documenté. Cité. Sans conclusions.",
-    de: "Dokumentiert. Zitiert. Ohne Schlussfolgerungen.",
-    ar: "موثّق. مُستشهَد. بلا استنتاجات.",
-    hi: "प्रलेखित। उद्धृत। कोई निष्कर्ष नहीं।",
-    zh: "有据可查。引用翔实。不下结论。",
-    ja: "文献に基づく。引用を明示。結論なし。",
-    he: "מתועד. מצוטט. ללא מסקנות.",
+    en: "5,000 years of human thought. One place to explore it.",
+    es: "5.000 años de pensamiento humano. Un lugar para explorarlo.",
+    pt: "5.000 anos de pensamento humano. Um lugar para explorar.",
+    fr: "5 000 ans de pensée humaine. Un lieu pour l'explorer.",
+    de: "5.000 Jahre menschlichen Denkens. Ein Ort, um es zu erkunden.",
+    ar: "٥٠٠٠ سنة من الفكر البشري. مكان واحد لاستكشافه.",
+    hi: "5,000 वर्षों का मानव चिंतन। एक स्थान इसे अन्वेषित करने के लिए।",
+    zh: "5000年人类思想。一个探索的地方。",
+    ja: "5,000年の人類の思索。探究するための場所。",
+    he: "5,000 שנות מחשבה אנושית. מקום אחד לחקור.",
   };
 
   const tagline = taglines[locale] ?? taglines["en"]!;
@@ -69,7 +69,7 @@ export default async function OGImage({
         </div>
         <div
           style={{
-            fontSize: 48,
+            fontSize: 44,
             color: "#E9E4D8",
             textAlign: "center",
             maxWidth: 900,
@@ -89,8 +89,10 @@ export default async function OGImage({
         />
         <div
           style={{
-            fontSize: 24,
+            fontSize: 22,
             color: "#8B90A3",
+            textAlign: "center",
+            maxWidth: 700,
           }}
         >
           {subtitle}

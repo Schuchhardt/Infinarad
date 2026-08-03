@@ -5,16 +5,16 @@ interface FooterProps {
 export function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear();
   const descs: Record<string, string> = {
-    en: "Documenting how humanity has answered the great questions. No conclusions.",
-    es: "Documentamos cómo la humanidad ha respondido las grandes preguntas. Sin conclusiones.",
-    pt: "Documentando como a humanidade respondeu às grandes questões. Sem conclusões.",
-    fr: "Documenter comment l'humanité a répondu aux grandes questions. Sans conclusions.",
-    de: "Dokumentieren, wie die Menschheit die großen Fragen beantwortet hat. Ohne Schlussfolgerungen.",
-    ar: "نوثّق كيف أجابت البشرية على الأسئلة الكبرى. بلا استنتاجات.",
-    hi: "मानवता ने महान प्रश्नों का उत्तर कैसे दिया, इसका प्रलेखन। कोई निष्कर्ष नहीं।",
-    zh: "记录人类如何回答伟大的问题。不下结论。",
-    ja: "人類がいかにして大いなる問いに答えてきたかを記録する。結論なし。",
-    he: "מתעדים כיצד האנושות ענתה על השאלות הגדולות. ללא מסקנות.",
+    en: "The living atlas of humanity's biggest questions. Documented, cited, never concluded.",
+    es: "El atlas vivo de las grandes preguntas de la humanidad. Documentado, citado, nunca concluido.",
+    pt: "O atlas vivo das maiores questões da humanidade. Documentado, citado, nunca concluído.",
+    fr: "L'atlas vivant des plus grandes questions de l'humanité. Documenté, cité, jamais conclu.",
+    de: "Der lebendige Atlas der größten Fragen der Menschheit. Dokumentiert, zitiert, nie abgeschlossen.",
+    ar: "الأطلس الحي لأكبر أسئلة البشرية. موثق، مُستشهد، لا يُختتم أبدًا.",
+    hi: "मानवता के सबसे बड़े प्रश्नों का जीवित मानचित्र। प्रलेखित, उद्धृत, कभी अंतिम नहीं।",
+    zh: "人类最大问题的活地图集。有据可查，引用明确，永不定论。",
+    ja: "人類の最大の問いの生きた地図帳。記録され、引用され、決して結論づけない。",
+    he: "האטלס החי של השאלות הגדולות של האנושות. מתועד, מצוטט, לעולם לא סופי.",
   };
   const desc = descs[locale] ?? descs["en"]!;
 

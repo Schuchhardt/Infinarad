@@ -13,13 +13,12 @@ export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) 
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const filtered = query.trim()
-    ? suggestions.filter(
-        (s) =>
-          s.title.toLowerCase().includes(query.toLowerCase()),
+    ? suggestions.filter((s) =>
+        s.title.toLowerCase().includes(query.toLowerCase()),
       )
     : suggestions;
 
@@ -30,6 +29,7 @@ export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) 
         !containerRef.current.contains(e.target as Node)
       ) {
         setShowSuggestions(false);
+        setIsFocused(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -54,14 +54,16 @@ export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) 
       <form onSubmit={handleSubmit} role="search">
         <div className="relative">
           <input
-            ref={inputRef}
             type="search"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
               setShowSuggestions(true);
             }}
-            onFocus={() => setShowSuggestions(true)}
+            onFocus={() => {
+              setShowSuggestions(true);
+              setIsFocused(true);
+            }}
             placeholder={placeholder}
             className="w-full rounded-sm border border-parchment/15 bg-ink-light/80 px-5 py-4 pe-12 font-display text-lg text-parchment placeholder:text-muted/50 focus:border-gold/40 focus:outline-none focus:ring-1 focus:ring-gold/20 transition-colors"
             aria-label={placeholder}
@@ -95,7 +97,7 @@ export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) 
           className="absolute z-40 mt-2 w-full rounded-sm border border-parchment/10 bg-ink-light shadow-lg shadow-black/30"
           role="listbox"
         >
-          {filtered.map((s) => (
+          {filtered.slice(0, 6).map((s) => (
             <li key={s.slug} role="option" aria-selected={false}>
               <button
                 onClick={() => navigateToQuestion(s.slug)}
@@ -106,6 +108,20 @@ export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) 
             </li>
           ))}
         </ul>
+      )}
+
+      {isFocused && !query.trim() && !showSuggestions && (
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          {suggestions.slice(0, 4).map((s) => (
+            <button
+              key={s.slug}
+              onClick={() => navigateToQuestion(s.slug)}
+              className="rounded-sm border border-parchment/10 px-3 py-1.5 font-mono text-xs text-muted/70 transition-colors hover:border-gold/30 hover:text-parchment"
+            >
+              {s.title}
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );
