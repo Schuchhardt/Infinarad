@@ -1,5 +1,6 @@
 import type { QuestionData } from "@/lib/data";
 import { Link } from "@/i18n/navigation";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 interface QuestionsSectionProps {
   questions: QuestionData[];
@@ -36,11 +37,7 @@ const CATEGORY_LABELS: Record<string, Record<CategoryKey, string>> = {
   he: { existence: "קיום", life: "חיים", death: "מוות", ethics: "אתיקה" },
 };
 
-export function QuestionsSection({
-  questions,
-  sectionTitle,
-  locale,
-}: QuestionsSectionProps) {
+export function QuestionsSection({ questions, sectionTitle, locale }: QuestionsSectionProps) {
   const labels = CATEGORY_LABELS[locale] ?? CATEGORY_LABELS["en"]!;
 
   const grouped = new Map<CategoryKey, QuestionData[]>();
@@ -53,39 +50,38 @@ export function QuestionsSection({
   }
 
   return (
-    <section className="px-6 py-32" aria-labelledby="questions-heading">
-      <div className="mx-auto max-w-4xl">
+    <section className="section-container py-28" aria-labelledby="questions-heading">
+      <ScrollReveal>
         <p
           id="questions-heading"
-          className="mb-20 font-mono text-xs tracking-[0.3em] uppercase text-gold"
+          className="mb-16 text-sm font-medium tracking-[0.3em] uppercase text-gold"
         >
           {sectionTitle}
         </p>
+      </ScrollReveal>
 
-        <div className="grid gap-16 md:grid-cols-2">
-          {CATEGORY_ORDER.map((cat) => {
-            const items = grouped.get(cat);
-            if (!items || items.length === 0) return null;
-            return (
-              <div key={cat}>
-                <h3 className="mb-6 font-display text-xl text-parchment/50 md:text-2xl">
+      <div className="grid gap-14 md:grid-cols-2">
+        {CATEGORY_ORDER.map((cat, catIdx) => {
+          const items = grouped.get(cat);
+          if (!items || items.length === 0) return null;
+          return (
+            <ScrollReveal key={cat} stagger={Math.min(catIdx + 1, 4)}>
+              <div>
+                <h3 className="mb-6 font-display text-xl font-medium text-text/40 md:text-2xl">
                   {labels[cat]}
                 </h3>
-                <ul className="space-y-4 list-none p-0 m-0">
+                <ul className="m-0 list-none space-y-4 p-0">
                   {items.map((q) => (
                     <li key={q.id}>
-                      <Link
-                        href={`/question/${q.slug}`}
-                        className="group block"
-                      >
+                      <Link href={`/question/${q.slug}`} className="group block">
                         <p
-                          className="font-display text-lg leading-snug text-parchment group-hover:text-gold transition-colors md:text-xl"
+                          className="font-display text-lg font-medium leading-snug tracking-[0.02em] text-text transition-colors duration-300 group-hover:text-gold md:text-xl"
                           lang={q.is_fallback ? "en" : undefined}
                         >
                           {q.title}
                           {q.is_fallback && (
                             <span
-                              className="ms-2 inline-block align-middle rounded border border-muted/30 px-1.5 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider text-muted"
+                              className="ms-2 inline-block rounded-[8px] border border-border px-1.5 py-0.5 align-middle text-[0.55rem] uppercase tracking-wider text-muted"
                               title="Not yet translated"
                             >
                               EN
@@ -97,9 +93,9 @@ export function QuestionsSection({
                   ))}
                 </ul>
               </div>
-            );
-          })}
-        </div>
+            </ScrollReveal>
+          );
+        })}
       </div>
     </section>
   );

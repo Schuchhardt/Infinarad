@@ -1,3 +1,5 @@
+import { ScrollReveal } from "@/components/scroll-reveal";
+
 interface TheRuleProps {
   locale: string;
 }
@@ -50,32 +52,34 @@ export function TheRule({ locale }: TheRuleProps) {
 
   return (
     <section
-      className="relative overflow-hidden bg-lapis/20 px-6 py-40"
+      className="relative overflow-hidden bg-surface/60 py-36"
       aria-labelledby="rule-heading"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-lapis/10 via-transparent to-gold/5" />
+      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-gold/3" />
 
-      <div className="relative z-10 mx-auto max-w-3xl text-center">
-        <p
-          className="mb-16 font-mono text-xs tracking-[0.3em] uppercase text-gold"
-          aria-hidden="true"
-        >
-          ·
-        </p>
+      <ScrollReveal className="relative z-10">
+        <div className="section-container text-center">
+          <p
+            className="mb-14 text-sm font-medium tracking-[0.3em] uppercase text-gold"
+            aria-hidden="true"
+          >
+            ·
+          </p>
 
-        <h2
-          id="rule-heading"
-          className="font-display text-3xl leading-tight text-parchment md:text-5xl"
-        >
-          {c.title}
-        </h2>
+          <h2
+            id="rule-heading"
+            className="font-display text-3xl font-medium leading-tight tracking-[0.04em] text-text md:text-5xl"
+          >
+            {c.title}
+          </h2>
 
-        <div className="mx-auto mt-8 h-px w-16 bg-gold/40" />
+          <div className="mx-auto mt-8 h-px w-16 bg-gold/30" />
 
-        <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-muted">
-          {c.body}
-        </p>
-      </div>
+          <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-muted">
+            {c.body}
+          </p>
+        </div>
+      </ScrollReveal>
     </section>
   );
 }

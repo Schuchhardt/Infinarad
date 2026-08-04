@@ -58,7 +58,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <head>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="min-h-screen bg-ink text-parchment">
+      <body className="min-h-screen bg-background text-text">
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}
         </NextIntlClientProvider>

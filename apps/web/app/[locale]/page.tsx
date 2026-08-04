@@ -11,6 +11,7 @@ import { SearchBar } from "@/components/search-bar";
 import { FeaturedQuestion } from "@/components/featured-question";
 import { LiveStats } from "@/components/live-stats";
 import { Timeline } from "@/components/timeline";
+import { KnowledgeGraphPreview } from "@/components/knowledge-graph-preview";
 import {
   getQuestions,
   getCollections,
@@ -96,7 +97,7 @@ export default async function LandingPage({ params }: Props) {
           descriptor={DESCRIPTORS[locale] ?? DESCRIPTORS["en"]!}
         />
 
-        <section className="px-6 py-16">
+        <section className="section-container py-16">
           <SearchBar
             locale={locale}
             placeholder={SEARCH_PLACEHOLDERS[locale] ?? SEARCH_PLACEHOLDERS["en"]!}
@@ -106,14 +107,6 @@ export default async function LandingPage({ params }: Props) {
             }))}
           />
         </section>
-
-        <LiveStats
-          locale={locale}
-          traditions={stats.traditions}
-          concepts={stats.concepts}
-          sources={stats.sources}
-          authors={stats.authors}
-        />
 
         {featured && (
           <FeaturedQuestion
@@ -128,19 +121,29 @@ export default async function LandingPage({ params }: Props) {
           />
         )}
 
-        <QuestionsSection
-          questions={questions}
-          sectionTitle={t("questionsTitle")}
-          locale={locale}
-        />
-
-        <Timeline locale={locale} />
-
-        <HowItWorks sectionTitle={howTitle} locale={locale} />
-
         <CollectionsSection
           collections={collections}
           sectionTitle={t("collectionsTitle")}
+          locale={locale}
+        />
+
+        <KnowledgeGraphPreview locale={locale} />
+
+        <Timeline locale={locale} />
+
+        <LiveStats
+          locale={locale}
+          traditions={stats.traditions}
+          concepts={stats.concepts}
+          sources={stats.sources}
+          authors={stats.authors}
+        />
+
+        <HowItWorks sectionTitle={howTitle} locale={locale} />
+
+        <QuestionsSection
+          questions={questions}
+          sectionTitle={t("questionsTitle")}
           locale={locale}
         />
 

@@ -1,3 +1,5 @@
+import { ScrollReveal } from "@/components/scroll-reveal";
+
 interface LiveStatsProps {
   locale: string;
   traditions: number;
@@ -26,13 +28,7 @@ const LABELS: Record<string, {
   he: { currently: "כרגע מתעדים", traditions: "מסורות", concepts: "מושגים", sources: "מקורות", thinkers: "דמויות היסטוריות", growing: "גדל כל שבוע." },
 };
 
-export function LiveStats({
-  locale,
-  traditions,
-  concepts,
-  sources,
-  authors,
-}: LiveStatsProps) {
+export function LiveStats({ locale, traditions, concepts, sources, authors }: LiveStatsProps) {
   const l = LABELS[locale] ?? LABELS["en"]!;
 
   const stats = [
@@ -46,29 +42,29 @@ export function LiveStats({
   if (!hasData) return null;
 
   return (
-    <section className="px-6 py-16" aria-label={l.currently}>
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="mb-8 font-mono text-xs tracking-[0.3em] uppercase text-muted/70">
-          {l.currently}
-        </p>
+    <section className="section-container py-20" aria-label={l.currently}>
+      <ScrollReveal>
+        <div className="text-center">
+          <p className="mb-10 text-xs font-medium tracking-[0.3em] uppercase text-muted/60">
+            {l.currently}
+          </p>
 
-        <div className="flex flex-wrap justify-center gap-8 md:gap-14">
-          {stats
-            .filter((s) => s.value > 0)
-            .map((s) => (
+          <div className="flex flex-wrap justify-center gap-10 md:gap-16">
+            {stats.filter((s) => s.value > 0).map((s) => (
               <div key={s.label}>
-                <p className="font-display text-3xl text-parchment md:text-4xl">
+                <p className="font-display text-3xl font-medium text-text md:text-4xl">
                   {s.value.toLocaleString()}
                 </p>
-                <p className="mt-1 font-mono text-xs tracking-wider text-muted/60">
+                <p className="mt-1.5 text-xs tracking-wider text-muted/50">
                   {s.label}
                 </p>
               </div>
             ))}
-        </div>
+          </div>
 
-        <p className="mt-8 font-mono text-xs text-gold/70">{l.growing}</p>
-      </div>
+          <p className="mt-10 text-xs text-gold/60">{l.growing}</p>
+        </div>
+      </ScrollReveal>
     </section>
   );
 }

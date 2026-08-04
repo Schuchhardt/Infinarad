@@ -19,13 +19,13 @@ export function Footer({ locale }: FooterProps) {
   const desc = descs[locale] ?? descs["en"]!;
 
   return (
-    <footer className="border-t border-parchment/8 px-6 py-16">
-      <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
-        <span className="font-mono text-xs font-medium tracking-[0.2em] uppercase text-parchment/60">
+    <footer className="border-t border-border px-8 py-20">
+      <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-6 text-center">
+        <span className="text-sm font-medium tracking-[0.2em] uppercase text-text/50">
           Infinarad
         </span>
         <p className="max-w-md text-sm leading-relaxed text-muted">{desc}</p>
-        <p className="font-mono text-[0.65rem] text-muted/50">
+        <p className="text-[0.65rem] text-muted/40">
           © {year} Infinarad
         </p>
       </div>

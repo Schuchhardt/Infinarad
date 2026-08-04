@@ -21,16 +21,16 @@ export function PracticesSection({ practices, title }: PracticesSectionProps) {
           {practices.map((p) => (
             <div
               key={p.id}
-              className="rounded-sm border border-parchment/8 bg-ink-light/50 p-6 transition-colors hover:border-gold/30"
+              className="rounded-sm border border-border bg-surface/50 p-6 transition-colors hover:border-gold/30"
             >
               <h3
-                className="font-display text-lg text-parchment"
+                className="font-display text-lg text-text"
                 lang={p.is_fallback ? "en" : undefined}
               >
                 {p.name}
               </h3>
               {p.tradition_name && (
-                <span className="mt-1 inline-block font-mono text-[0.65rem] uppercase tracking-wider text-verdigris/80">
+                <span className="mt-1 inline-block text-[0.65rem] font-medium uppercase tracking-wider text-accent/80">
                   {p.tradition_name}
                 </span>
               )}

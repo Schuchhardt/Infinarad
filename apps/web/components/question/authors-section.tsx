@@ -28,11 +28,11 @@ export function AuthorsSection({ authors, title }: AuthorsSectionProps) {
           {authors.map((a) => (
             <div
               key={a.id}
-              className="flex items-baseline gap-6 border-b border-parchment/6 pb-6 last:border-0"
+              className="flex items-baseline gap-6 border-b border-border pb-6 last:border-0"
             >
               <div className="flex-1">
                 <h3
-                  className="font-display text-lg text-parchment"
+                  className="font-display text-lg text-text"
                   lang={a.is_fallback ? "en" : undefined}
                 >
                   {a.name}
@@ -44,7 +44,7 @@ export function AuthorsSection({ authors, title }: AuthorsSectionProps) {
                 )}
               </div>
               {(a.birth_year || a.death_year) && (
-                <span className="shrink-0 font-mono text-xs text-muted/50">
+                <span className="shrink-0 text-xs font-medium text-muted/50">
                   {formatLifespan(a.birth_year, a.death_year)}
                 </span>
               )}

@@ -1,3 +1,5 @@
+import { ScrollReveal } from "@/components/scroll-reveal";
+
 interface HowItWorksProps {
   sectionTitle: string;
   locale: string;
@@ -80,37 +82,38 @@ export function HowItWorks({ sectionTitle, locale }: HowItWorksProps) {
   const steps = STEPS[locale] ?? STEPS["en"]!;
 
   return (
-    <section
-      className="bg-lapis/30 px-6 py-32"
-      aria-labelledby="how-heading"
-    >
-      <div className="mx-auto max-w-5xl">
-        <p
-          id="how-heading"
-          className="mb-20 font-mono text-xs tracking-[0.3em] uppercase text-gold"
-        >
-          {sectionTitle}
-        </p>
+    <section className="bg-surface/80 py-28" aria-labelledby="how-heading">
+      <div className="section-container">
+        <ScrollReveal>
+          <p
+            id="how-heading"
+            className="mb-16 text-sm font-medium tracking-[0.3em] uppercase text-gold"
+          >
+            {sectionTitle}
+          </p>
+        </ScrollReveal>
 
         <div className="grid gap-8 md:grid-cols-5">
           {steps.map((step, i) => (
-            <div key={step.label} className="relative">
-              <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold/40 font-mono text-xs text-gold">
-                  {i + 1}
-                </span>
-                {i < steps.length - 1 && (
-                  <div
-                    className="hidden flex-1 border-t border-dashed border-gold/20 md:block"
-                    aria-hidden="true"
-                  />
-                )}
+            <ScrollReveal key={step.label} stagger={Math.min(i + 1, 5)}>
+              <div className="relative">
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/30 text-xs font-medium text-gold">
+                    {i + 1}
+                  </span>
+                  {i < steps.length - 1 && (
+                    <div
+                      className="hidden flex-1 border-t border-dashed border-border md:block"
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
+                <h3 className="mb-2 font-display text-lg font-medium text-text">
+                  {step.label}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted">{step.desc}</p>
               </div>
-              <h3 className="mb-2 font-display text-lg text-parchment">
-                {step.label}
-              </h3>
-              <p className="text-sm leading-relaxed text-muted">{step.desc}</p>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>

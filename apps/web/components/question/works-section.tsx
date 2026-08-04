@@ -19,7 +19,7 @@ export function WorksSection({ works, title }: WorksSectionProps) {
 
   return (
     <section
-      className="bg-lapis/10 px-6 py-16"
+      className="bg-accent/10 px-6 py-16"
       aria-labelledby="works-heading"
     >
       <div className="mx-auto max-w-4xl">
@@ -32,11 +32,11 @@ export function WorksSection({ works, title }: WorksSectionProps) {
           {works.map((w) => (
             <div
               key={w.id}
-              className="flex items-baseline gap-6 border-b border-parchment/6 pb-6 last:border-0"
+              className="flex items-baseline gap-6 border-b border-border pb-6 last:border-0"
             >
               <div className="flex-1">
                 <h3
-                  className="font-display text-lg text-parchment italic"
+                  className="font-display text-lg text-text italic"
                   lang={w.is_fallback ? "en" : undefined}
                 >
                   {w.name}
@@ -54,12 +54,12 @@ export function WorksSection({ works, title }: WorksSectionProps) {
               </div>
               <div className="shrink-0 text-end">
                 {w.original_language && (
-                  <span className="block font-mono text-[0.65rem] uppercase tracking-wider text-verdigris/60">
+                  <span className="block text-[0.65rem] font-medium uppercase tracking-wider text-accent/60">
                     {w.original_language}
                   </span>
                 )}
                 {(w.composed_start || w.composed_end) && (
-                  <span className="block font-mono text-xs text-muted/50">
+                  <span className="block text-xs font-medium text-muted/50">
                     {formatComposed(w.composed_start, w.composed_end)}
                   </span>
                 )}

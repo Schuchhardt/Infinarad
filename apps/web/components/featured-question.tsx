@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 interface FeaturedQuestionProps {
   locale: string;
@@ -55,44 +56,44 @@ export function FeaturedQuestion({
   if (stats.length === 0) return null;
 
   return (
-    <section className="px-6 py-24" aria-labelledby="featured-heading">
-      <div className="mx-auto max-w-3xl">
+    <section className="section-container py-28" aria-labelledby="featured-heading">
+      <ScrollReveal>
         <p
           id="featured-heading"
-          className="mb-12 text-center font-mono text-xs tracking-[0.3em] uppercase text-gold"
+          className="mb-14 text-center text-sm font-medium tracking-[0.3em] uppercase text-gold"
         >
           {l.sectionTitle}
         </p>
 
-        <div className="rounded-sm border border-parchment/10 bg-ink-light/60 p-8 md:p-12">
-          <p className="mb-8 text-center font-display text-2xl leading-snug text-parchment md:text-3xl">
+        <div className="rounded-[20px] border border-border bg-card p-10 transition-all duration-500 hover:-translate-y-0.5 hover:border-gold/30 md:p-14">
+          <p className="mb-10 text-center font-display text-2xl font-medium leading-snug tracking-[0.04em] text-text md:text-3xl">
             {title}
           </p>
 
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+          <div className="flex flex-wrap justify-center gap-8 md:gap-12">
             {stats.map((s) => (
               <div key={s.label} className="text-center">
-                <p className="font-display text-3xl text-gold md:text-4xl">
+                <p className="font-display text-3xl font-medium text-gold md:text-4xl">
                   {s.value}
                 </p>
-                <p className="mt-1 font-mono text-xs tracking-wider text-muted">
+                <p className="mt-1.5 text-xs tracking-wider text-muted">
                   {s.label}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="mt-10 text-center">
+          <div className="mt-12 text-center">
             <Link
               href={`/question/${slug}`}
-              className="inline-flex items-center gap-2 border border-gold/40 px-6 py-3 font-mono text-xs tracking-[0.2em] uppercase text-gold transition-colors hover:bg-gold/10"
+              className="inline-flex h-14 items-center gap-2 rounded-[16px] border border-gold/40 px-8 text-sm font-medium tracking-[0.15em] uppercase text-gold transition-all duration-300 hover:bg-gold hover:text-background"
             >
               {l.explore}
               <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

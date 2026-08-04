@@ -212,7 +212,7 @@ export default async function QuestionPage({ params }: Props) {
           <div className="mx-auto max-w-4xl">
             <Link
               href="/"
-              className="mb-8 inline-flex items-center gap-2 font-mono text-xs text-muted/60 hover:text-gold transition-colors"
+              className="mb-8 inline-flex items-center gap-2 text-xs font-medium text-muted/60 hover:text-gold transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -230,12 +230,12 @@ export default async function QuestionPage({ params }: Props) {
               {label("backToQuestions", locale)}
             </Link>
             <h1
-              className="font-display text-4xl leading-tight text-parchment md:text-6xl"
+              className="font-display text-4xl leading-tight text-text md:text-6xl"
               lang={question.is_fallback ? "en" : undefined}
             >
               {question.title}
               {question.is_fallback && (
-                <span className="ms-4 inline-block align-middle rounded border border-muted/30 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-muted">
+                <span className="ms-4 inline-block align-middle rounded border border-muted/30 px-2 py-0.5 text-[0.6rem] font-medium uppercase tracking-wider text-muted">
                   EN
                 </span>
               )}
