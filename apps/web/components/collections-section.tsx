@@ -1,4 +1,5 @@
 import type { CollectionData } from "@/lib/data";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 interface CollectionsSectionProps {
   collections: CollectionData[];
@@ -7,12 +8,12 @@ interface CollectionsSectionProps {
 }
 
 const COLLECTION_ICONS: Record<string, string> = {
-  "col_DHARMIC": "🕉",
-  "col_ABRAHAMIC": "☽",
-  "col_CLASSICAL": "⚡",
-  "col_EAST_ASIAN": "☯",
-  "col_INDIGENOUS": "🌿",
-  "col_MODERN": "🔬",
+  col_DHARMIC: "ॐ",
+  col_ABRAHAMIC: "☽",
+  col_CLASSICAL: "⚡",
+  col_EAST_ASIAN: "☯",
+  col_INDIGENOUS: "🌿",
+  col_MODERN: "🔬",
 };
 
 function pluralizeTraditions(count: number, locale: string): string {
@@ -38,33 +39,32 @@ export function CollectionsSection({
   locale,
 }: CollectionsSectionProps) {
   return (
-    <section className="px-6 py-32" aria-labelledby="collections-heading">
-      <div className="mx-auto max-w-4xl">
+    <section className="section-container py-28" aria-labelledby="collections-heading">
+      <ScrollReveal>
         <p
           id="collections-heading"
-          className="mb-20 font-mono text-xs tracking-[0.3em] uppercase text-gold"
+          className="mb-16 text-sm font-medium tracking-[0.3em] uppercase text-gold"
         >
           {sectionTitle}
         </p>
+      </ScrollReveal>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {collections.map((col) => (
-            <div
-              key={col.id}
-              className="group rounded-sm border border-parchment/8 bg-ink-light/50 p-8 transition-colors hover:border-gold/30"
-            >
-              <p className="mb-4 text-3xl" aria-hidden="true">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {collections.map((col, i) => (
+          <ScrollReveal key={col.id} stagger={Math.min(i + 1, 5)}>
+            <div className="group rounded-[20px] border border-border bg-card p-10 transition-all duration-500 hover:-translate-y-0.5 hover:border-gold/30">
+              <p className="mb-5 text-3xl" aria-hidden="true">
                 {COLLECTION_ICONS[col.id] ?? "◈"}
               </p>
-              <h3 className="font-display text-xl text-parchment md:text-2xl">
+              <h3 className="font-display text-xl font-medium tracking-[0.04em] text-text md:text-2xl">
                 {col.name}
               </h3>
-              <p className="mt-3 font-mono text-xs text-muted">
+              <p className="mt-3 text-xs tracking-wider text-muted">
                 {pluralizeTraditions(col.tradition_count, locale)}
               </p>
             </div>
-          ))}
-        </div>
+          </ScrollReveal>
+        ))}
       </div>
     </section>
   );

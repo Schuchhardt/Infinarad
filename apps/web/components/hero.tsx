@@ -72,6 +72,21 @@ const HERO_COPY: Record<string, { line1: string; line2: string; line3: string }>
   },
 };
 
+const CONSTELLATION_DOTS = [
+  { top: "12%", left: "15%", delay: "0s" },
+  { top: "25%", left: "78%", delay: "1.2s" },
+  { top: "45%", left: "8%", delay: "0.6s" },
+  { top: "60%", left: "88%", delay: "2.4s" },
+  { top: "18%", left: "45%", delay: "1.8s" },
+  { top: "72%", left: "32%", delay: "0.3s" },
+  { top: "35%", left: "62%", delay: "3.0s" },
+  { top: "80%", left: "72%", delay: "1.5s" },
+  { top: "8%", left: "90%", delay: "2.1s" },
+  { top: "55%", left: "50%", delay: "0.9s" },
+  { top: "90%", left: "20%", delay: "2.7s" },
+  { top: "40%", left: "25%", delay: "3.3s" },
+];
+
 interface HeroProps {
   locale: string;
   descriptor: string;
@@ -101,42 +116,63 @@ export function Hero({ locale, descriptor }: HeroProps) {
 
   return (
     <section
-      className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 py-24"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center"
       aria-label="Infinarad"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-ink via-ink-light to-ink opacity-80" />
+      <div className="hero-bg">
+        {CONSTELLATION_DOTS.map((dot, i) => (
+          <span
+            key={i}
+            className="constellation-dot"
+            style={{ top: dot.top, left: dot.left, animationDelay: dot.delay }}
+            aria-hidden="true"
+          />
+        ))}
+      </div>
 
-      <div className="relative z-10 mx-auto max-w-4xl text-center">
-        <p className="mb-6 font-mono text-xs tracking-[0.3em] uppercase text-gold">
+      <div className="relative z-10 mx-auto max-w-4xl px-8 text-center lg:px-[120px]">
+        <p
+          className="mb-6 animate-fade-in text-sm font-medium tracking-[0.3em] uppercase text-gold"
+          style={{ animationDelay: "200ms" }}
+        >
           Infinarad
         </p>
 
-        <p className="mb-12 font-display text-base tracking-wide text-parchment/60 md:text-lg">
+        <p
+          className="mb-14 animate-fade-in font-display text-base font-medium tracking-[0.1em] text-text/50 md:text-lg"
+          style={{ animationDelay: "400ms" }}
+        >
           {descriptor}
         </p>
 
-        <div className="mb-10 space-y-2">
-          <p className="font-display text-2xl leading-relaxed text-parchment/90 md:text-4xl">
+        <div className="mb-10 animate-fade-in space-y-3" style={{ animationDelay: "600ms" }}>
+          <p className="font-display text-2xl font-medium leading-relaxed tracking-[0.04em] text-text/85 md:text-4xl">
             {copy.line1}
           </p>
-          <p className="font-display text-2xl leading-relaxed text-parchment md:text-4xl">
+          <p className="font-display text-2xl font-medium leading-relaxed tracking-[0.04em] text-text md:text-4xl">
             {copy.line2}
           </p>
         </div>
 
-        <div className="mb-10 h-px w-24 mx-auto bg-gold/40" />
+        <div
+          className="mx-auto mb-10 h-px w-24 animate-fade-in bg-gold/30"
+          style={{ animationDelay: "800ms" }}
+        />
 
-        <p className="font-display text-lg tracking-wide text-parchment/70 md:text-xl">
+        <p
+          className="animate-fade-in font-display text-lg font-medium tracking-[0.04em] text-text/60 md:text-xl"
+          style={{ animationDelay: "1000ms" }}
+        >
           {copy.line3}
         </p>
 
-        <div className="mt-16" role="presentation">
+        <div className="mt-20 animate-fade-in" role="presentation" style={{ animationDelay: "1200ms" }}>
           {prefersReducedMotion ? (
             <div className="space-y-3">
               {SCRIPT_LINES.slice(0, 4).map((line) => (
                 <p
                   key={line.lang}
-                  className="font-display text-lg leading-relaxed text-parchment/30 md:text-xl"
+                  className="font-display text-lg leading-relaxed text-text/20 md:text-xl"
                   dir={line.dir}
                   lang={line.lang}
                 >
@@ -149,7 +185,7 @@ export function Hero({ locale, descriptor }: HeroProps) {
               {SCRIPT_LINES.map((line, i) => (
                 <p
                   key={line.lang}
-                  className="script-line absolute inset-0 flex items-center justify-center font-display text-xl leading-tight text-parchment/40 transition-opacity duration-1000 md:text-2xl"
+                  className="script-line absolute inset-0 flex items-center justify-center font-display text-xl leading-tight text-text/25 transition-opacity duration-1000 md:text-2xl"
                   style={{ opacity: i === activeIndex ? 1 : 0 }}
                   dir={line.dir}
                   lang={line.lang}
@@ -165,8 +201,9 @@ export function Hero({ locale, descriptor }: HeroProps) {
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
         <div
-          className="h-8 w-px bg-gradient-to-b from-gold/60 to-transparent animate-pulse"
+          className="h-10 w-px bg-gradient-to-b from-gold/40 to-transparent"
           aria-hidden="true"
+          style={{ animation: "pulse-glow 3s ease-in-out infinite" }}
         />
       </div>
     </section>

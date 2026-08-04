@@ -11,7 +11,7 @@ export function SymbolsSection({ symbols, title }: SymbolsSectionProps) {
 
   return (
     <section
-      className="bg-lapis/10 px-6 py-16"
+      className="bg-accent/10 px-6 py-16"
       aria-labelledby="symbols-heading"
     >
       <div className="mx-auto max-w-4xl">
@@ -24,7 +24,7 @@ export function SymbolsSection({ symbols, title }: SymbolsSectionProps) {
           {symbols.map((s) => (
             <div
               key={s.id}
-              className="rounded-sm border border-parchment/8 bg-ink/60 p-6 text-center transition-colors hover:border-gold/30"
+              className="rounded-sm border border-border bg-background/60 p-6 text-center transition-colors hover:border-gold/30"
             >
               {s.unicode_char && (
                 <span
@@ -36,13 +36,13 @@ export function SymbolsSection({ symbols, title }: SymbolsSectionProps) {
                 </span>
               )}
               <h3
-                className="font-display text-lg text-parchment"
+                className="font-display text-lg text-text"
                 lang={s.is_fallback ? "en" : undefined}
               >
                 {s.name}
               </h3>
               {s.tradition_name && (
-                <span className="mt-1 inline-block font-mono text-[0.65rem] uppercase tracking-wider text-gold/60">
+                <span className="mt-1 inline-block text-[0.65rem] font-medium uppercase tracking-wider text-gold/60">
                   {s.tradition_name}
                 </span>
               )}

@@ -109,7 +109,7 @@ export default async function SearchPage({ params, searchParams }: Props) {
           <div className="mx-auto max-w-4xl">
             <Link
               href="/"
-              className="mb-8 inline-flex items-center gap-2 font-mono text-xs text-muted/60 hover:text-gold transition-colors"
+              className="mb-8 inline-flex items-center gap-2 text-xs font-medium text-muted/60 hover:text-gold transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +135,7 @@ export default async function SearchPage({ params, searchParams }: Props) {
               />
             </div>
 
-            <p className="mb-8 font-mono text-xs tracking-[0.3em] uppercase text-gold">
+            <p className="mb-8 text-xs font-medium tracking-[0.3em] uppercase text-gold">
               {query ? t("results", locale) : t("allQuestions", locale)}
             </p>
 
@@ -149,12 +149,12 @@ export default async function SearchPage({ params, searchParams }: Props) {
                       href={`/question/${r.slug}`}
                       className="group flex items-baseline gap-6"
                     >
-                      <span className="shrink-0 font-mono text-xs text-muted/40 tabular-nums">
+                      <span className="shrink-0 text-xs font-medium text-muted/40 tabular-nums">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <div>
                         <h2
-                          className="font-display text-2xl text-parchment group-hover:text-gold transition-colors md:text-3xl"
+                          className="font-display text-2xl text-text group-hover:text-gold transition-colors md:text-3xl"
                           lang={r.is_fallback ? "en" : undefined}
                         >
                           {r.title}

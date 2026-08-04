@@ -9,12 +9,12 @@ export function SectionHeading({ id, title, count }: SectionHeadingProps) {
     <div className="mb-8 flex items-baseline gap-3">
       <h2
         id={id}
-        className="font-mono text-xs tracking-[0.3em] uppercase text-gold"
+        className="text-xs font-medium tracking-[0.3em] uppercase text-gold"
       >
         {title}
       </h2>
       {count !== undefined && count > 0 && (
-        <span className="font-mono text-[0.65rem] text-muted/50">
+        <span className="text-[0.65rem] font-medium text-muted/50">
           {count}
         </span>
       )}

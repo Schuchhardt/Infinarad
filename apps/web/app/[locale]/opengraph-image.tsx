@@ -45,7 +45,7 @@ export default async function OGImage({
     (
       <div
         style={{
-          background: "#0D1220",
+          background: "#090B0F",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -59,10 +59,9 @@ export default async function OGImage({
           style={{
             fontSize: 28,
             letterSpacing: "0.3em",
-            color: "#C6A44D",
+            color: "#C6A66B",
             textTransform: "uppercase" as const,
             marginBottom: 40,
-            fontFamily: "monospace",
           }}
         >
           INFINARAD
@@ -70,7 +69,7 @@ export default async function OGImage({
         <div
           style={{
             fontSize: 44,
-            color: "#E9E4D8",
+            color: "#F3F2EE",
             textAlign: "center",
             maxWidth: 900,
             lineHeight: 1.3,
@@ -82,15 +81,15 @@ export default async function OGImage({
           style={{
             width: 64,
             height: 1,
-            background: "#C6A44D",
-            opacity: 0.4,
+            background: "#C6A66B",
+            opacity: 0.3,
             margin: "32px 0",
           }}
         />
         <div
           style={{
             fontSize: 22,
-            color: "#8B90A3",
+            color: "#9AA5B3",
             textAlign: "center",
             maxWidth: 700,
           }}

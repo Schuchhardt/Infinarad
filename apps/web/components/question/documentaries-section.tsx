@@ -31,10 +31,10 @@ export function DocumentariesSection({
           {documentaries.map((d) => (
             <div
               key={d.id}
-              className="group overflow-hidden rounded-sm border border-parchment/8 bg-ink-light/50 transition-colors hover:border-gold/30"
+              className="group overflow-hidden rounded-sm border border-border bg-surface/50 transition-colors hover:border-gold/30"
             >
               {d.youtube_id && (
-                <div className="relative aspect-video bg-ink">
+                <div className="relative aspect-video bg-background">
                   <iframe
                     src={`https://www.youtube-nocookie.com/embed/${d.youtube_id}`}
                     title={d.name}
@@ -47,19 +47,19 @@ export function DocumentariesSection({
               )}
               <div className="p-6">
                 <h3
-                  className="font-display text-lg text-parchment"
+                  className="font-display text-lg text-text"
                   lang={d.is_fallback ? "en" : undefined}
                 >
                   {d.name}
                 </h3>
                 <div className="mt-1 flex items-center gap-3">
                   {d.tradition_name && (
-                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-verdigris/80">
+                    <span className="text-[0.65rem] font-medium uppercase tracking-wider text-accent/80">
                       {d.tradition_name}
                     </span>
                   )}
                   {d.duration_sec && (
-                    <span className="font-mono text-[0.65rem] text-muted/50">
+                    <span className="text-[0.65rem] font-medium text-muted/50">
                       {formatDuration(d.duration_sec)}
                     </span>
                   )}
