@@ -18,7 +18,7 @@ export async function getTranslated(
 ): Promise<TranslatedRow[]> {
   return sql<TranslatedRow[]>`
     SELECT entity_type, entity_id, locale, field, value, is_fallback, is_stale, translation_status
-    FROM translated
+    FROM infi_translated
     WHERE entity_type = ${entityType}
       AND entity_id = ${entityId}
       AND locale = ${locale}
@@ -36,7 +36,7 @@ export async function getTranslatedFields(
   if (fields && fields.length > 0) {
     return sql<TranslatedRow[]>`
       SELECT entity_type, entity_id, locale, field, value, is_fallback, is_stale, translation_status
-      FROM translated
+      FROM infi_translated
       WHERE entity_type = ${entityType}
         AND entity_id = ANY(${entityIds})
         AND locale = ${locale}
@@ -46,7 +46,7 @@ export async function getTranslatedFields(
 
   return sql<TranslatedRow[]>`
     SELECT entity_type, entity_id, locale, field, value, is_fallback, is_stale, translation_status
-    FROM translated
+    FROM infi_translated
     WHERE entity_type = ${entityType}
       AND entity_id = ANY(${entityIds})
       AND locale = ${locale}

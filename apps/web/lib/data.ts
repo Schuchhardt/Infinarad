@@ -42,7 +42,7 @@ export async function getActiveLocales(): Promise<LocaleData[]> {
     () =>
       sql<LocaleData[]>`
         SELECT code, name_native AS name, direction
-        FROM locale
+        FROM infi_locale
         WHERE is_active = true
         ORDER BY sort_order
       `,
@@ -63,23 +63,23 @@ export async function getQuestions(locale: string): Promise<QuestionData[]> {
           COALESCE(t_title.value, t_title_en.value, '') AS title,
           COALESCE(t_summary.value, t_summary_en.value, '') AS summary,
           (t_title.value IS NULL) AS is_fallback
-        FROM question q
-        LEFT JOIN translation t_title
+        FROM infi_question q
+        LEFT JOIN infi_translation t_title
           ON t_title.entity_type = 'question'
           AND t_title.entity_id = q.id
           AND t_title.locale = ${locale}
           AND t_title.field = 'title'
-        LEFT JOIN translation t_title_en
+        LEFT JOIN infi_translation t_title_en
           ON t_title_en.entity_type = 'question'
           AND t_title_en.entity_id = q.id
           AND t_title_en.locale = 'en'
           AND t_title_en.field = 'title'
-        LEFT JOIN translation t_summary
+        LEFT JOIN infi_translation t_summary
           ON t_summary.entity_type = 'question'
           AND t_summary.entity_id = q.id
           AND t_summary.locale = ${locale}
           AND t_summary.field = 'summary'
-        LEFT JOIN translation t_summary_en
+        LEFT JOIN infi_translation t_summary_en
           ON t_summary_en.entity_type = 'question'
           AND t_summary_en.entity_id = q.id
           AND t_summary_en.locale = 'en'
@@ -102,20 +102,20 @@ export async function getCollections(
           c.slug,
           COALESCE(t_name.value, t_name_en.value, c.slug) AS name,
           COALESCE(tc.cnt, 0)::int AS tradition_count
-        FROM collection c
-        LEFT JOIN translation t_name
+        FROM infi_collection c
+        LEFT JOIN infi_translation t_name
           ON t_name.entity_type = 'collection'
           AND t_name.entity_id = c.id
           AND t_name.locale = ${locale}
           AND t_name.field = 'name'
-        LEFT JOIN translation t_name_en
+        LEFT JOIN infi_translation t_name_en
           ON t_name_en.entity_type = 'collection'
           AND t_name_en.entity_id = c.id
           AND t_name_en.locale = 'en'
           AND t_name_en.field = 'name'
         LEFT JOIN LATERAL (
           SELECT count(*)::int AS cnt
-          FROM tradition t
+          FROM infi_tradition t
           WHERE t.collection_id = c.id AND t.status = 'published'
         ) tc ON true
         WHERE c.status = 'published'
@@ -128,7 +128,7 @@ export async function getCollections(
 export async function getHeroSubtitle(locale: string): Promise<string> {
   return safeQuery(async () => {
     const rows = await sql<{ value: string }[]>`
-      SELECT value FROM translation
+      SELECT value FROM infi_translation
       WHERE entity_type = 'question'
         AND entity_id = 'q_DEATH'
         AND locale = ${locale}
@@ -136,7 +136,7 @@ export async function getHeroSubtitle(locale: string): Promise<string> {
     `;
     if (rows[0]) return rows[0].value;
     const fallback = await sql<{ value: string }[]>`
-      SELECT value FROM translation
+      SELECT value FROM infi_translation
       WHERE entity_type = 'question'
         AND entity_id = 'q_DEATH'
         AND locale = 'en'
@@ -153,12 +153,12 @@ export async function getTheRule(
     const rows = await sql<{ field: string; value: string }[]>`
       SELECT t.field, COALESCE(t.value, t_en.value) AS value
       FROM (VALUES ('the_rule'), ('the_rule_body')) AS fields(field)
-      LEFT JOIN translation t
+      LEFT JOIN infi_translation t
         ON t.entity_type = 'collection'
         AND t.entity_id = 'col_DHARMIC'
         AND t.locale = ${locale}
         AND t.field = fields.field
-      LEFT JOIN translation t_en
+      LEFT JOIN infi_translation t_en
         ON t_en.entity_type = 'collection'
         AND t_en.entity_id = 'col_DHARMIC'
         AND t_en.locale = 'en'
@@ -180,7 +180,7 @@ export async function getTheRule(
 export async function getHowItWorksTitle(locale: string): Promise<string> {
   return safeQuery(async () => {
     const rows = await sql<{ value: string }[]>`
-      SELECT value FROM translation
+      SELECT value FROM infi_translation
       WHERE entity_type = 'collection'
         AND entity_id = 'col_DHARMIC'
         AND locale = ${locale}
@@ -188,7 +188,7 @@ export async function getHowItWorksTitle(locale: string): Promise<string> {
     `;
     if (rows[0]) return rows[0].value;
     const fallback = await sql<{ value: string }[]>`
-      SELECT value FROM translation
+      SELECT value FROM infi_translation
       WHERE entity_type = 'collection'
         AND entity_id = 'col_DHARMIC'
         AND locale = 'en'
@@ -208,10 +208,10 @@ export interface PlatformStats {
 export async function getPlatformStats(): Promise<PlatformStats> {
   return safeQuery(async () => {
     const rows = await sql<{ entity: string; count: number }[]>`
-      SELECT 'traditions' AS entity, count(*)::int AS count FROM tradition WHERE status = 'published'
-      UNION ALL SELECT 'concepts', count(*)::int FROM concept WHERE status = 'published'
-      UNION ALL SELECT 'sources', count(*)::int FROM source
-      UNION ALL SELECT 'authors', count(*)::int FROM author WHERE status = 'published'
+      SELECT 'traditions' AS entity, count(*)::int AS count FROM infi_tradition WHERE status = 'published'
+      UNION ALL SELECT 'concepts', count(*)::int FROM infi_concept WHERE status = 'published'
+      UNION ALL SELECT 'sources', count(*)::int FROM infi_source
+      UNION ALL SELECT 'authors', count(*)::int FROM infi_author WHERE status = 'published'
     `;
     const map = Object.fromEntries(rows.map((r) => [r.entity, r.count]));
     return {
@@ -239,10 +239,10 @@ export async function getFeaturedQuestionStats(questionId: string, locale: strin
     const qRows = await sql<{ id: string; slug: string; title: string }[]>`
       SELECT q.id, q.slug,
         COALESCE(t.value, t_en.value, q.slug) AS title
-      FROM question q
-      LEFT JOIN translation t ON t.entity_type = 'question' AND t.entity_id = q.id
+      FROM infi_question q
+      LEFT JOIN infi_translation t ON t.entity_type = 'question' AND t.entity_id = q.id
         AND t.locale = ${locale} AND t.field = 'title'
-      LEFT JOIN translation t_en ON t_en.entity_type = 'question' AND t_en.entity_id = q.id
+      LEFT JOIN infi_translation t_en ON t_en.entity_type = 'question' AND t_en.entity_id = q.id
         AND t_en.locale = 'en' AND t_en.field = 'title'
       WHERE q.id = ${questionId} AND q.status = 'published'
     `;
@@ -250,41 +250,41 @@ export async function getFeaturedQuestionStats(questionId: string, locale: strin
 
     const countRows = await sql<{ entity: string; count: number }[]>`
       SELECT 'traditions' AS entity, count(DISTINCT t.id)::int AS count
-      FROM edge e1
-      JOIN concept c ON c.id = e1.to_id AND c.status = 'published'
-      JOIN edge e2 ON e2.from_type = 'concept' AND e2.from_id = c.id
+      FROM infi_edge e1
+      JOIN infi_concept c ON c.id = e1.to_id AND c.status = 'published'
+      JOIN infi_edge e2 ON e2.from_type = 'concept' AND e2.from_id = c.id
         AND e2.to_type = 'tradition' AND e2.approved_at IS NOT NULL
-      JOIN tradition t ON t.id = e2.to_id AND t.status = 'published'
+      JOIN infi_tradition t ON t.id = e2.to_id AND t.status = 'published'
       WHERE e1.from_type = 'question' AND e1.from_id = ${questionId}
         AND e1.to_type = 'concept' AND e1.approved_at IS NOT NULL
       UNION ALL
       SELECT 'concepts', count(DISTINCT c.id)::int
-      FROM edge e JOIN concept c ON c.id = e.to_id AND c.status = 'published'
+      FROM infi_edge e JOIN infi_concept c ON c.id = e.to_id AND c.status = 'published'
       WHERE e.from_type = 'question' AND e.from_id = ${questionId}
         AND e.to_type = 'concept' AND e.approved_at IS NOT NULL
       UNION ALL
       SELECT 'sources', count(DISTINCT s.id)::int
-      FROM living_page lp
-      JOIN living_page_citation lpc ON lpc.living_page_id = lp.id
-      JOIN citation ct ON ct.id = lpc.citation_id
-      JOIN source s ON s.id = ct.source_id
+      FROM infi_living_page lp
+      JOIN infi_living_page_citation lpc ON lpc.living_page_id = lp.id
+      JOIN infi_citation ct ON ct.id = lpc.citation_id
+      JOIN infi_source s ON s.id = ct.source_id
       WHERE lp.question_id = ${questionId} AND lp.status = 'published'
       UNION ALL
       SELECT 'authors', count(DISTINCT a.id)::int
-      FROM edge e1
-      JOIN concept c ON c.id = e1.to_id AND c.status = 'published'
-      JOIN edge e2 ON e2.from_type = 'concept' AND e2.from_id = c.id
+      FROM infi_edge e1
+      JOIN infi_concept c ON c.id = e1.to_id AND c.status = 'published'
+      JOIN infi_edge e2 ON e2.from_type = 'concept' AND e2.from_id = c.id
         AND e2.to_type = 'tradition' AND e2.approved_at IS NOT NULL
-      JOIN author a ON a.tradition_id = e2.to_id AND a.status = 'published'
+      JOIN infi_author a ON a.tradition_id = e2.to_id AND a.status = 'published'
       WHERE e1.from_type = 'question' AND e1.from_id = ${questionId}
         AND e1.to_type = 'concept' AND e1.approved_at IS NOT NULL
       UNION ALL
       SELECT 'works', count(DISTINCT w.id)::int
-      FROM edge e1
-      JOIN concept c ON c.id = e1.to_id AND c.status = 'published'
-      JOIN edge e2 ON e2.from_type = 'concept' AND e2.from_id = c.id
+      FROM infi_edge e1
+      JOIN infi_concept c ON c.id = e1.to_id AND c.status = 'published'
+      JOIN infi_edge e2 ON e2.from_type = 'concept' AND e2.from_id = c.id
         AND e2.to_type = 'tradition' AND e2.approved_at IS NOT NULL
-      JOIN work w ON w.tradition_id = e2.to_id AND w.status = 'published'
+      JOIN infi_work w ON w.tradition_id = e2.to_id AND w.status = 'published'
       WHERE e1.from_type = 'question' AND e1.from_id = ${questionId}
         AND e1.to_type = 'concept' AND e1.approved_at IS NOT NULL
     `;

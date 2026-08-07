@@ -6,30 +6,83 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE EXTENSION IF NOT EXISTS unaccent;
 CREATE EXTENSION IF NOT EXISTS vector;
 
-CREATE TYPE entity_type AS ENUM (
-  'question','tradition','concept','author','work','practice','symbol',
-  'period','region','collection','documentary','living_page','source'
-);
+-- Enum types are guarded with DO blocks: this schema is shared with other
+-- projects and the objects may already exist. Idempotent creation.
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_entity_type') THEN
+    CREATE TYPE infi_entity_type AS ENUM (
+      'question','tradition','concept','author','work','practice','symbol',
+      'period','region','collection','documentary','living_page','source'
+    );
+  END IF;
+END $$;
 
-CREATE TYPE publication_status AS ENUM ('draft','in_review','published','archived','retracted');
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_publication_status') THEN
+    CREATE TYPE infi_publication_status AS ENUM ('draft','in_review','published','archived','retracted');
+  END IF;
+END $$;
 
-CREATE TYPE relation_type AS ENUM (
-  'addresses','contrasts_with','derives_from','influenced_by',
-  'practiced_by','authored_by','contained_in','located_in',
-  'occurred_during','related_to','translates'
-);
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_relation_type') THEN
+    CREATE TYPE infi_relation_type AS ENUM (
+      'addresses','contrasts_with','derives_from','influenced_by',
+      'practiced_by','authored_by','contained_in','located_in',
+      'occurred_during','related_to','translates'
+    );
+  END IF;
+END $$;
 
-CREATE TYPE source_kind AS ENUM ('primary_text','academic','book','article','dataset','archive','interview');
-CREATE TYPE license_kind AS ENUM ('public_domain','cc0','cc_by','cc_by_sa','permission_granted','proprietary','unknown');
-CREATE TYPE verification_status AS ENUM ('unverified','supported','partial','unsupported','misattributed');
-CREATE TYPE translation_status AS ENUM ('machine','reviewed','human');
-CREATE TYPE changelog_kind AS ENUM ('creation','correction','expansion','style','retraction','translation');
-CREATE TYPE actor_type AS ENUM ('editor','agent','community');
-CREATE TYPE user_role AS ENUM ('admin','editor','reviewer','translator','viewer');
-CREATE TYPE text_direction AS ENUM ('ltr','rtl');
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_source_kind') THEN
+    CREATE TYPE infi_source_kind AS ENUM ('primary_text','academic','book','article','dataset','archive','interview');
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_license_kind') THEN
+    CREATE TYPE infi_license_kind AS ENUM ('public_domain','cc0','cc_by','cc_by_sa','permission_granted','proprietary','unknown');
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_verification_status') THEN
+    CREATE TYPE infi_verification_status AS ENUM ('unverified','supported','partial','unsupported','misattributed');
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_translation_status') THEN
+    CREATE TYPE infi_translation_status AS ENUM ('machine','reviewed','human');
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_changelog_kind') THEN
+    CREATE TYPE infi_changelog_kind AS ENUM ('creation','correction','expansion','style','retraction','translation');
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_actor_type') THEN
+    CREATE TYPE infi_actor_type AS ENUM ('editor','agent','community');
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_user_role') THEN
+    CREATE TYPE infi_user_role AS ENUM ('admin','editor','reviewer','translator','viewer');
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'infi_text_direction') THEN
+    CREATE TYPE infi_text_direction AS ENUM ('ltr','rtl');
+  END IF;
+END $$;
 
 -- Prefixed ULID generator
-CREATE OR REPLACE FUNCTION gen_prefixed_id(prefix text)
+CREATE OR REPLACE FUNCTION infi_gen_prefixed_id(prefix text)
 RETURNS text
 LANGUAGE plpgsql
 AS $$

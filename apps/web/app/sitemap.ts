@@ -8,7 +8,7 @@ const BASE_URL =
 async function getPublishedSlugs(): Promise<string[]> {
   try {
     const rows = await sql<{ slug: string }[]>`
-      SELECT slug FROM question WHERE status = 'published' ORDER BY sort_order
+      SELECT slug FROM infi_question WHERE status = 'published' ORDER BY sort_order
     `;
     return rows.map((r) => r.slug);
   } catch {

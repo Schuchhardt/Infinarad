@@ -1,31 +1,33 @@
 -- 0008_i18n.sql
 -- Translation system with fallback resolution
 
-CREATE TABLE translation (
-  entity_type       entity_type NOT NULL,
+CREATE TABLE infi_translation (
+  entity_type       infi_entity_type NOT NULL,
   entity_id         text NOT NULL,
-  locale            text NOT NULL REFERENCES locale(code),
+  locale            text NOT NULL REFERENCES infi_locale(code),
   field             text NOT NULL,
   value             text NOT NULL,
-  status            translation_status NOT NULL DEFAULT 'machine',
-  source_revision_id text REFERENCES revision(id),
+  status            infi_translation_status NOT NULL DEFAULT 'machine',
+  source_revision_id text REFERENCES infi_revision(id),
   translated_by     uuid,
   updated_at        timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (entity_type, entity_id, locale, field)
 );
 
-CREATE INDEX translation_lookup ON translation (entity_type, entity_id, locale);
+CREATE INDEX infi_translation_lookup ON infi_translation (entity_type, entity_id, locale);
 
-CREATE OR REPLACE FUNCTION immutable_unaccent(text)
+-- Wrapper made IMMUTABLE so it can back a GIN index. plpgsql (not inlined)
+-- resolves unaccent at runtime via search_path, which is safer in a shared schema.
+CREATE OR REPLACE FUNCTION infi_immutable_unaccent(text)
 RETURNS text
-LANGUAGE sql IMMUTABLE PARALLEL SAFE STRICT
-AS $$ SELECT unaccent($1) $$;
+LANGUAGE plpgsql IMMUTABLE PARALLEL SAFE STRICT
+AS $fn$ BEGIN RETURN unaccent($1); END $fn$;
 
-CREATE INDEX translation_fts ON translation
-  USING gin (to_tsvector('simple', immutable_unaccent(value)));
+CREATE INDEX infi_translation_fts ON infi_translation
+  USING gin (to_tsvector('simple', infi_immutable_unaccent(value)));
 
-CREATE TABLE slug_redirect (
-  locale     text NOT NULL REFERENCES locale(code),
+CREATE TABLE infi_slug_redirect (
+  locale     text NOT NULL REFERENCES infi_locale(code),
   old_path   text NOT NULL,
   new_path   text NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
@@ -33,15 +35,15 @@ CREATE TABLE slug_redirect (
 );
 
 -- View: resolved translations with fallback chain and staleness detection
-CREATE OR REPLACE VIEW translated AS
+CREATE OR REPLACE VIEW infi_translated AS
 WITH master AS (
-  SELECT code FROM locale WHERE is_master LIMIT 1
+  SELECT code FROM infi_locale WHERE is_master LIMIT 1
 ),
 active_locales AS (
-  SELECT code, fallback_code FROM locale WHERE is_active
+  SELECT code, fallback_code FROM infi_locale WHERE is_active
 ),
 entity_fields AS (
-  SELECT DISTINCT entity_type, entity_id, field FROM translation
+  SELECT DISTINCT entity_type, entity_id, field FROM infi_translation
 )
 SELECT
   ef.entity_type,
@@ -61,11 +63,11 @@ SELECT
     WHEN t_direct.value IS NOT NULL
       AND t_direct.source_revision_id IS NOT NULL
       AND EXISTS (
-        SELECT 1 FROM revision r
+        SELECT 1 FROM infi_revision r
         WHERE r.entity_type = ef.entity_type
           AND r.entity_id = ef.entity_id
           AND r.version > (
-            SELECT r2.version FROM revision r2
+            SELECT r2.version FROM infi_revision r2
             WHERE r2.id = t_direct.source_revision_id
           )
       )
@@ -76,18 +78,18 @@ SELECT
 FROM entity_fields ef
 CROSS JOIN active_locales al
 CROSS JOIN master m
-LEFT JOIN translation t_direct
+LEFT JOIN infi_translation t_direct
   ON t_direct.entity_type = ef.entity_type
   AND t_direct.entity_id = ef.entity_id
   AND t_direct.locale = al.code
   AND t_direct.field = ef.field
-LEFT JOIN translation t_fallback
+LEFT JOIN infi_translation t_fallback
   ON t_fallback.entity_type = ef.entity_type
   AND t_fallback.entity_id = ef.entity_id
   AND t_fallback.locale = al.fallback_code
   AND t_fallback.field = ef.field
   AND t_direct.value IS NULL
-LEFT JOIN translation t_master
+LEFT JOIN infi_translation t_master
   ON t_master.entity_type = ef.entity_type
   AND t_master.entity_id = ef.entity_id
   AND t_master.locale = m.code

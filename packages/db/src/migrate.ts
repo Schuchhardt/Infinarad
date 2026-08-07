@@ -1,17 +1,14 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import postgres from "postgres";
-
-const connectionString =
-  process.env["DATABASE_URL"] ??
-  "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
+import { createSql } from "./connection.js";
 
 async function migrate() {
-  const sql = postgres(connectionString);
+  const sql = createSql();
 
   try {
     await sql`
-      CREATE TABLE IF NOT EXISTS _migrations (
+      CREATE TABLE IF NOT EXISTS infi_migrations (
         name text PRIMARY KEY,
         applied_at timestamptz NOT NULL DEFAULT now()
       )
@@ -23,7 +20,7 @@ async function migrate() {
       .sort();
 
     const applied = await sql<{ name: string }[]>`
-      SELECT name FROM _migrations ORDER BY name
+      SELECT name FROM infi_migrations ORDER BY name
     `;
     const appliedSet = new Set(applied.map((r) => r.name));
 
@@ -38,7 +35,7 @@ async function migrate() {
 
       await sql.begin(async (tx) => {
         await tx.unsafe(content);
-        await tx`INSERT INTO _migrations (name) VALUES (${file})`;
+        await tx`INSERT INTO infi_migrations (name) VALUES (${file})`;
       });
 
       console.log(`  done  ${file}`);

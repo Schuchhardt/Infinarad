@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -34,9 +35,14 @@ export function Nav({ locale, locales }: NavProps) {
       role="navigation"
       aria-label="Main"
     >
-      <span className="text-sm font-medium tracking-[0.2em] uppercase text-text/80">
-        Infinarad
-      </span>
+      <Image
+        src="/logo/infinarad-logo_transparent.png"
+        alt="Infinarad"
+        width={220}
+        height={62}
+        priority
+        className="h-7 w-auto"
+      />
 
       <div
         className="flex items-center gap-1.5 text-xs"

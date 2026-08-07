@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface FooterProps {
   locale: string;
 }
@@ -21,9 +23,13 @@ export function Footer({ locale }: FooterProps) {
   return (
     <footer className="border-t border-border px-8 py-20">
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-6 text-center">
-        <span className="text-sm font-medium tracking-[0.2em] uppercase text-text/50">
-          Infinarad
-        </span>
+        <Image
+          src="/logo/infinarad_yellow-transparent.png"
+          alt="Infinarad"
+          width={120}
+          height={62}
+          className="h-7 w-auto opacity-50"
+        />
         <p className="max-w-md text-sm leading-relaxed text-muted">{desc}</p>
         <p className="text-[0.65rem] text-muted/40">
           © {year} Infinarad

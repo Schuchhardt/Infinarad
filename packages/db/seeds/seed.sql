@@ -2,7 +2,7 @@
 -- Idempotent: uses ON CONFLICT DO NOTHING
 
 -- ===== LOCALES =====
-INSERT INTO locale (code, name_native, name_en, direction, is_master, is_active, fallback_code, font_stack, sort_order) VALUES
+INSERT INTO infi_locale (code, name_native, name_en, direction, is_master, is_active, fallback_code, font_stack, sort_order) VALUES
   ('en', 'English',     'English',     'ltr', true,  true,  NULL, 'Noto Sans, Noto Serif, sans-serif', 1),
   ('es', 'Español',     'Spanish',     'ltr', false, true,  'en', 'Noto Sans, Noto Serif, sans-serif', 2),
   ('pt', 'Português',   'Portuguese',  'ltr', false, false, 'es', 'Noto Sans, Noto Serif, sans-serif', 3),
@@ -16,7 +16,7 @@ INSERT INTO locale (code, name_native, name_en, direction, is_master, is_active,
 ON CONFLICT (code) DO NOTHING;
 
 -- ===== REGIONS =====
-INSERT INTO region (id, slug, parent_id, centroid_lat, centroid_lng) VALUES
+INSERT INTO infi_region (id, slug, parent_id, centroid_lat, centroid_lng) VALUES
   ('reg_SOUTH_ASIA',   'south-asia',   NULL, 20.5937, 78.9629),
   ('reg_EAST_ASIA',    'east-asia',    NULL, 35.8617, 104.1954),
   ('reg_MIDDLE_EAST',  'middle-east',  NULL, 29.3117, 47.4818),
@@ -26,7 +26,7 @@ INSERT INTO region (id, slug, parent_id, centroid_lat, centroid_lng) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- ===== COLLECTIONS =====
-INSERT INTO collection (id, slug, sort_order, status) VALUES
+INSERT INTO infi_collection (id, slug, sort_order, status) VALUES
   ('col_DHARMIC',      'dharmic-traditions',     1, 'published'),
   ('col_ABRAHAMIC',    'abrahamic-traditions',    2, 'published'),
   ('col_EAST_ASIAN',   'east-asian-traditions',   3, 'published'),
@@ -39,7 +39,7 @@ INSERT INTO collection (id, slug, sort_order, status) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- ===== QUESTIONS =====
-INSERT INTO question (id, slug, status, is_featured, sort_order) VALUES
+INSERT INTO infi_question (id, slug, status, is_featured, sort_order) VALUES
   ('q_DEATH',         'what-happens-after-death',     'published', true,  1),
   ('q_SUFFERING',     'why-do-we-suffer',             'published', true,  2),
   ('q_DIVINE',        'what-is-the-nature-of-god',    'published', true,  3),
@@ -53,7 +53,7 @@ INSERT INTO question (id, slug, status, is_featured, sort_order) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- ===== TRADITIONS =====
-INSERT INTO tradition (id, slug, collection_id, era_start, era_end, primary_region_id, status) VALUES
+INSERT INTO infi_tradition (id, slug, collection_id, era_start, era_end, primary_region_id, status) VALUES
   ('trd_HINDUISM',     'hinduism',         'col_DHARMIC',       -1500, NULL, 'reg_SOUTH_ASIA',  'published'),
   ('trd_BUDDHISM',     'buddhism',         'col_DHARMIC',       -500,  NULL, 'reg_SOUTH_ASIA',  'published'),
   ('trd_JAINISM',      'jainism',          'col_DHARMIC',       -600,  NULL, 'reg_SOUTH_ASIA',  'published'),
@@ -69,7 +69,7 @@ INSERT INTO tradition (id, slug, collection_id, era_start, era_end, primary_regi
 ON CONFLICT (id) DO NOTHING;
 
 -- ===== CONCEPTS =====
-INSERT INTO concept (id, slug, tradition_id, original_term, transliteration, original_script, status) VALUES
+INSERT INTO infi_concept (id, slug, tradition_id, original_term, transliteration, original_script, status) VALUES
   ('cpt_DUKKHA',    'dukkha',    'trd_BUDDHISM',  'दुःख',    'duḥkha',     'Devanagari', 'published'),
   ('cpt_NAFS',      'nafs',      'trd_SUFISM',    'نفس',     'nafs',       'Arabic',     'published'),
   ('cpt_TAO',       'tao',       'trd_TAOISM',    '道',       'dào',        'Chinese',    'published'),
@@ -81,7 +81,7 @@ INSERT INTO concept (id, slug, tradition_id, original_term, transliteration, ori
 ON CONFLICT (id) DO NOTHING;
 
 -- ===== PERIODS =====
-INSERT INTO period (id, slug, start_year, end_year) VALUES
+INSERT INTO infi_period (id, slug, start_year, end_year) VALUES
   ('per_AXIAL',      'axial-age',           -800,  -200),
   ('per_CLASSICAL',  'classical-antiquity', -500,   500),
   ('per_MEDIEVAL',   'medieval-period',      500,   1500),
@@ -89,7 +89,7 @@ INSERT INTO period (id, slug, start_year, end_year) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- ===== AUTHORS =====
-INSERT INTO author (id, slug, birth_year, death_year, tradition_id, status) VALUES
+INSERT INTO infi_author (id, slug, birth_year, death_year, tradition_id, status) VALUES
   ('aut_BUDDHA',     'siddhartha-gautama', -563,  -483,  'trd_BUDDHISM',     'published'),
   ('aut_RUMI',       'rumi',               1207,  1273,  'trd_SUFISM',       'published'),
   ('aut_LAOZI',      'laozi',              -600,  -500,  'trd_TAOISM',       'published'),
@@ -99,7 +99,7 @@ INSERT INTO author (id, slug, birth_year, death_year, tradition_id, status) VALU
 ON CONFLICT (id) DO NOTHING;
 
 -- ===== WORKS =====
-INSERT INTO work (id, slug, author_id, tradition_id, original_language, composed_start, composed_end, status) VALUES
+INSERT INTO infi_work (id, slug, author_id, tradition_id, original_language, composed_start, composed_end, status) VALUES
   ('wrk_DHAMMAPADA',     'dhammapada',          'aut_BUDDHA',    'trd_BUDDHISM', 'Pali',     -300, -100, 'published'),
   ('wrk_MASNAVI',        'masnavi',             'aut_RUMI',      'trd_SUFISM',   'Persian',  1258, 1273, 'published'),
   ('wrk_TAO_TE_CHING',   'tao-te-ching',        'aut_LAOZI',     'trd_TAOISM',   'Classical Chinese', -400, -400, 'published'),
@@ -107,7 +107,7 @@ INSERT INTO work (id, slug, author_id, tradition_id, original_language, composed
 ON CONFLICT (id) DO NOTHING;
 
 -- ===== SOURCES =====
-INSERT INTO source (id, kind, title, author_name, year, license, max_quote_words) VALUES
+INSERT INTO infi_source (id, kind, title, author_name, year, license, max_quote_words) VALUES
   ('src_DHAMMAPADA_PD',   'primary_text', 'The Dhammapada (Müller translation)',    'Max Müller',        1881, 'public_domain', 500),
   ('src_TAO_PD',          'primary_text', 'Tao Te Ching (Legge translation)',       'James Legge',       1891, 'public_domain', 500),
   ('src_GITA_PD',         'primary_text', 'Bhagavad Gita (Edwin Arnold translation)', 'Edwin Arnold',   1885, 'public_domain', 500),
@@ -117,7 +117,7 @@ INSERT INTO source (id, kind, title, author_name, year, license, max_quote_words
 ON CONFLICT (id) DO NOTHING;
 
 -- ===== CITATIONS =====
-INSERT INTO citation (id, source_id, source_quotable, locator, claim_text, quote) VALUES
+INSERT INTO infi_citation (id, source_id, source_quotable, locator, claim_text, quote) VALUES
   ('cit_DHAM_01', 'src_DHAMMAPADA_PD', true, 'Verse 1', 'The Buddha teaches that mind is the forerunner of all actions', 'All that we are is the result of what we have thought'),
   ('cit_TAO_01',  'src_TAO_PD',        true, 'Chapter 1', 'Laozi establishes that the nameable Tao is not the eternal Tao', 'The Tao that can be told is not the eternal Tao'),
   ('cit_GITA_01', 'src_GITA_PD',       true, 'Chapter 2, Verse 47', 'Krishna instructs Arjuna on the nature of action without attachment', 'Thy business is with the action only, never with its fruits'),
@@ -125,7 +125,7 @@ INSERT INTO citation (id, source_id, source_quotable, locator, claim_text, quote
 ON CONFLICT (id) DO NOTHING;
 
 -- ===== EDGES (20 approved) =====
-INSERT INTO edge (id, from_type, from_id, to_type, to_id, relation, weight, approved_at) VALUES
+INSERT INTO infi_edge (id, from_type, from_id, to_type, to_id, relation, weight, approved_at) VALUES
   ('edg_01', 'question',  'q_SUFFERING',     'concept',   'cpt_DUKKHA',     'addresses',      0.9, now()),
   ('edg_02', 'question',  'q_SELF',          'concept',   'cpt_ATMAN',      'addresses',      0.9, now()),
   ('edg_03', 'question',  'q_SELF',          'concept',   'cpt_NAFS',       'addresses',      0.8, now()),
@@ -150,7 +150,7 @@ ON CONFLICT (id) DO NOTHING;
 
 -- ===== TRANSLATIONS =====
 -- Collections (EN + ES)
-INSERT INTO translation (entity_type, entity_id, locale, field, value, status) VALUES
+INSERT INTO infi_translation (entity_type, entity_id, locale, field, value, status) VALUES
   ('collection', 'col_DHARMIC',      'en', 'name', 'Dharmic Traditions',         'human'),
   ('collection', 'col_DHARMIC',      'es', 'name', 'Tradiciones Dhármicas',      'human'),
   ('collection', 'col_ABRAHAMIC',    'en', 'name', 'Abrahamic Traditions',       'human'),
@@ -172,7 +172,7 @@ INSERT INTO translation (entity_type, entity_id, locale, field, value, status) V
 ON CONFLICT DO NOTHING;
 
 -- Questions (EN + ES, except q_CONSCIOUSNESS which is EN-only to test fallback)
-INSERT INTO translation (entity_type, entity_id, locale, field, value, status) VALUES
+INSERT INTO infi_translation (entity_type, entity_id, locale, field, value, status) VALUES
   ('question', 'q_DEATH',     'en', 'title', 'What happens after death?', 'human'),
   ('question', 'q_DEATH',     'es', 'title', '¿Qué sucede después de la muerte?', 'human'),
   ('question', 'q_DEATH',     'en', 'summary', 'Every civilization has confronted mortality. Their answers reveal what they value most about being alive.', 'human'),
@@ -215,7 +215,7 @@ INSERT INTO translation (entity_type, entity_id, locale, field, value, status) V
 ON CONFLICT DO NOTHING;
 
 -- Traditions (EN + ES)
-INSERT INTO translation (entity_type, entity_id, locale, field, value, status) VALUES
+INSERT INTO infi_translation (entity_type, entity_id, locale, field, value, status) VALUES
   ('tradition', 'trd_HINDUISM',     'en', 'name', 'Hinduism',      'human'),
   ('tradition', 'trd_HINDUISM',     'es', 'name', 'Hinduismo',     'human'),
   ('tradition', 'trd_BUDDHISM',     'en', 'name', 'Buddhism',      'human'),
@@ -243,7 +243,7 @@ INSERT INTO translation (entity_type, entity_id, locale, field, value, status) V
 ON CONFLICT DO NOTHING;
 
 -- Traditions summaries
-INSERT INTO translation (entity_type, entity_id, locale, field, value, status) VALUES
+INSERT INTO infi_translation (entity_type, entity_id, locale, field, value, status) VALUES
   ('tradition', 'trd_HINDUISM',     'en', 'summary', 'The oldest living tradition, a river of practices and philosophies spanning five millennia.', 'human'),
   ('tradition', 'trd_HINDUISM',     'es', 'summary', 'La tradición viva más antigua, un río de prácticas y filosofías que abarca cinco milenios.', 'human'),
   ('tradition', 'trd_BUDDHISM',     'en', 'summary', 'A path to the cessation of suffering, born in India and now global.', 'human'),
@@ -257,7 +257,7 @@ INSERT INTO translation (entity_type, entity_id, locale, field, value, status) V
 ON CONFLICT DO NOTHING;
 
 -- Concepts (EN + ES)
-INSERT INTO translation (entity_type, entity_id, locale, field, value, status) VALUES
+INSERT INTO infi_translation (entity_type, entity_id, locale, field, value, status) VALUES
   ('concept', 'cpt_DUKKHA',  'en', 'name', 'Dukkha (Suffering)',                        'human'),
   ('concept', 'cpt_DUKKHA',  'es', 'name', 'Dukkha (Sufrimiento)',                      'human'),
   ('concept', 'cpt_DUKKHA',  'en', 'summary', 'The first noble truth: existence is inherently unsatisfactory.', 'human'),
@@ -279,7 +279,7 @@ INSERT INTO translation (entity_type, entity_id, locale, field, value, status) V
 ON CONFLICT DO NOTHING;
 
 -- Landing page content translations
-INSERT INTO translation (entity_type, entity_id, locale, field, value, status) VALUES
+INSERT INTO infi_translation (entity_type, entity_id, locale, field, value, status) VALUES
   -- Hero subtitle
   ('question', 'q_DEATH', 'en', 'hero_subtitle', 'One question. Ten answers. No conclusion.', 'human'),
   ('question', 'q_DEATH', 'es', 'hero_subtitle', 'Una pregunta. Diez respuestas. Ninguna conclusión.', 'human'),
@@ -296,7 +296,7 @@ INSERT INTO translation (entity_type, entity_id, locale, field, value, status) V
 ON CONFLICT DO NOTHING;
 
 -- Authors (EN + ES)
-INSERT INTO translation (entity_type, entity_id, locale, field, value, status) VALUES
+INSERT INTO infi_translation (entity_type, entity_id, locale, field, value, status) VALUES
   ('author', 'aut_BUDDHA',     'en', 'name', 'Siddhartha Gautama',  'human'),
   ('author', 'aut_BUDDHA',     'es', 'name', 'Siddhartha Gautama',  'human'),
   ('author', 'aut_RUMI',       'en', 'name', 'Jalāl ad-Dīn Rūmī',  'human'),
@@ -312,7 +312,7 @@ INSERT INTO translation (entity_type, entity_id, locale, field, value, status) V
 ON CONFLICT DO NOTHING;
 
 -- Changelog entries for landing-relevant content
-INSERT INTO translation (entity_type, entity_id, locale, field, value, status) VALUES
+INSERT INTO infi_translation (entity_type, entity_id, locale, field, value, status) VALUES
   ('period', 'per_AXIAL',      'en', 'name', 'Axial Age',            'human'),
   ('period', 'per_AXIAL',      'es', 'name', 'Era Axial',            'human'),
   ('period', 'per_CLASSICAL',  'en', 'name', 'Classical Antiquity',  'human'),
@@ -324,7 +324,7 @@ INSERT INTO translation (entity_type, entity_id, locale, field, value, status) V
 ON CONFLICT DO NOTHING;
 
 -- Region names
-INSERT INTO translation (entity_type, entity_id, locale, field, value, status) VALUES
+INSERT INTO infi_translation (entity_type, entity_id, locale, field, value, status) VALUES
   ('region', 'reg_SOUTH_ASIA',   'en', 'name', 'South Asia',    'human'),
   ('region', 'reg_SOUTH_ASIA',   'es', 'name', 'Asia del Sur',  'human'),
   ('region', 'reg_EAST_ASIA',    'en', 'name', 'East Asia',     'human'),

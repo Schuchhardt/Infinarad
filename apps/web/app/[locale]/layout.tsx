@@ -1,9 +1,24 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import "@/app/globals.css";
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 type Props = {
   children: ReactNode;
@@ -42,6 +57,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
       locale,
       siteName: t("appName"),
+      images: [
+        {
+          url: `${BASE_URL}/images/infinarad_opentag.png`,
+          width: 1200,
+          height: 630,
+          alt: t("appName"),
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [`${BASE_URL}/images/infinarad_opentag.png`],
     },
   };
 }
@@ -54,10 +81,8 @@ export default async function LocaleLayout({ children, params }: Props) {
   const dir = RTL_LOCALES.has(locale) ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir={dir} className="antialiased">
-      <head>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
+    <html lang={locale} dir={dir} className={`antialiased ${cormorant.variable} ${inter.variable}`}>
+      <head />
       <body className="min-h-screen bg-background text-text">
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}

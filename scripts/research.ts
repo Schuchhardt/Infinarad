@@ -9,15 +9,11 @@
  *   pnpm research --list           # list available questions and traditions
  */
 
-import postgres from "postgres";
+import { createSql } from "../packages/db/src/connection.js";
 import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
 
-const DATABASE_URL =
-  process.env["DATABASE_URL"] ??
-  "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
-
-const sql = postgres(DATABASE_URL);
+const sql = createSql();
 
 // ── CLI parsing ──────────────────────────────────────────────────────
 
@@ -201,14 +197,14 @@ async function findQuestion(
     SELECT q.id, q.slug,
       COALESCE(t.value, t_en.value, q.slug) AS title,
       COALESCE(ts.value, ts_en.value, '') AS summary
-    FROM question q
-    LEFT JOIN translation t ON t.entity_type='question' AND t.entity_id=q.id
+    FROM infi_question q
+    LEFT JOIN infi_translation t ON t.entity_type='question' AND t.entity_id=q.id
       AND t.locale=${locale} AND t.field='title'
-    LEFT JOIN translation t_en ON t_en.entity_type='question' AND t_en.entity_id=q.id
+    LEFT JOIN infi_translation t_en ON t_en.entity_type='question' AND t_en.entity_id=q.id
       AND t_en.locale='en' AND t_en.field='title'
-    LEFT JOIN translation ts ON ts.entity_type='question' AND ts.entity_id=q.id
+    LEFT JOIN infi_translation ts ON ts.entity_type='question' AND ts.entity_id=q.id
       AND ts.locale=${locale} AND ts.field='summary'
-    LEFT JOIN translation ts_en ON ts_en.entity_type='question' AND ts_en.entity_id=q.id
+    LEFT JOIN infi_translation ts_en ON ts_en.entity_type='question' AND ts_en.entity_id=q.id
       AND ts_en.locale='en' AND ts_en.field='summary'
     WHERE q.slug = ${term} AND q.status = 'published'
   `;
@@ -219,19 +215,19 @@ async function findQuestion(
     SELECT q.id, q.slug,
       COALESCE(t.value, t_en.value, q.slug) AS title,
       COALESCE(ts.value, ts_en.value, '') AS summary
-    FROM question q
-    LEFT JOIN translation t ON t.entity_type='question' AND t.entity_id=q.id
+    FROM infi_question q
+    LEFT JOIN infi_translation t ON t.entity_type='question' AND t.entity_id=q.id
       AND t.locale=${locale} AND t.field='title'
-    LEFT JOIN translation t_en ON t_en.entity_type='question' AND t_en.entity_id=q.id
+    LEFT JOIN infi_translation t_en ON t_en.entity_type='question' AND t_en.entity_id=q.id
       AND t_en.locale='en' AND t_en.field='title'
-    LEFT JOIN translation ts ON ts.entity_type='question' AND ts.entity_id=q.id
+    LEFT JOIN infi_translation ts ON ts.entity_type='question' AND ts.entity_id=q.id
       AND ts.locale=${locale} AND ts.field='summary'
-    LEFT JOIN translation ts_en ON ts_en.entity_type='question' AND ts_en.entity_id=q.id
+    LEFT JOIN infi_translation ts_en ON ts_en.entity_type='question' AND ts_en.entity_id=q.id
       AND ts_en.locale='en' AND ts_en.field='summary'
     WHERE q.status = 'published'
       AND (
         q.slug ILIKE '%' || ${term} || '%'
-        OR immutable_unaccent(COALESCE(t.value, t_en.value, '')) ILIKE '%' || immutable_unaccent(${term}) || '%'
+        OR infi_immutable_unaccent(COALESCE(t.value, t_en.value, '')) ILIKE '%' || infi_immutable_unaccent(${term}) || '%'
       )
     ORDER BY q.sort_order LIMIT 1
   `;
@@ -247,18 +243,18 @@ async function findTradition(
       COALESCE(tn.value, tn_en.value, t.slug) AS name,
       COALESCE(ts.value, ts_en.value, '') AS summary,
       COALESCE(tc.value, tc_en.value) AS collection_name
-    FROM tradition t
-    LEFT JOIN translation tn ON tn.entity_type='tradition' AND tn.entity_id=t.id
+    FROM infi_tradition t
+    LEFT JOIN infi_translation tn ON tn.entity_type='tradition' AND tn.entity_id=t.id
       AND tn.locale=${locale} AND tn.field='name'
-    LEFT JOIN translation tn_en ON tn_en.entity_type='tradition' AND tn_en.entity_id=t.id
+    LEFT JOIN infi_translation tn_en ON tn_en.entity_type='tradition' AND tn_en.entity_id=t.id
       AND tn_en.locale='en' AND tn_en.field='name'
-    LEFT JOIN translation ts ON ts.entity_type='tradition' AND ts.entity_id=t.id
+    LEFT JOIN infi_translation ts ON ts.entity_type='tradition' AND ts.entity_id=t.id
       AND ts.locale=${locale} AND ts.field='summary'
-    LEFT JOIN translation ts_en ON ts_en.entity_type='tradition' AND ts_en.entity_id=t.id
+    LEFT JOIN infi_translation ts_en ON ts_en.entity_type='tradition' AND ts_en.entity_id=t.id
       AND ts_en.locale='en' AND ts_en.field='summary'
-    LEFT JOIN translation tc ON tc.entity_type='collection' AND tc.entity_id=t.collection_id
+    LEFT JOIN infi_translation tc ON tc.entity_type='collection' AND tc.entity_id=t.collection_id
       AND tc.locale=${locale} AND tc.field='name'
-    LEFT JOIN translation tc_en ON tc_en.entity_type='collection' AND tc_en.entity_id=t.collection_id
+    LEFT JOIN infi_translation tc_en ON tc_en.entity_type='collection' AND tc_en.entity_id=t.collection_id
       AND tc_en.locale='en' AND tc_en.field='name'
     WHERE t.slug = ${term} AND t.status = 'published'
   `;
@@ -269,23 +265,23 @@ async function findTradition(
       COALESCE(tn.value, tn_en.value, t.slug) AS name,
       COALESCE(ts.value, ts_en.value, '') AS summary,
       COALESCE(tc.value, tc_en.value) AS collection_name
-    FROM tradition t
-    LEFT JOIN translation tn ON tn.entity_type='tradition' AND tn.entity_id=t.id
+    FROM infi_tradition t
+    LEFT JOIN infi_translation tn ON tn.entity_type='tradition' AND tn.entity_id=t.id
       AND tn.locale=${locale} AND tn.field='name'
-    LEFT JOIN translation tn_en ON tn_en.entity_type='tradition' AND tn_en.entity_id=t.id
+    LEFT JOIN infi_translation tn_en ON tn_en.entity_type='tradition' AND tn_en.entity_id=t.id
       AND tn_en.locale='en' AND tn_en.field='name'
-    LEFT JOIN translation ts ON ts.entity_type='tradition' AND ts.entity_id=t.id
+    LEFT JOIN infi_translation ts ON ts.entity_type='tradition' AND ts.entity_id=t.id
       AND ts.locale=${locale} AND ts.field='summary'
-    LEFT JOIN translation ts_en ON ts_en.entity_type='tradition' AND ts_en.entity_id=t.id
+    LEFT JOIN infi_translation ts_en ON ts_en.entity_type='tradition' AND ts_en.entity_id=t.id
       AND ts_en.locale='en' AND ts_en.field='summary'
-    LEFT JOIN translation tc ON tc.entity_type='collection' AND tc.entity_id=t.collection_id
+    LEFT JOIN infi_translation tc ON tc.entity_type='collection' AND tc.entity_id=t.collection_id
       AND tc.locale=${locale} AND tc.field='name'
-    LEFT JOIN translation tc_en ON tc_en.entity_type='collection' AND tc_en.entity_id=t.collection_id
+    LEFT JOIN infi_translation tc_en ON tc_en.entity_type='collection' AND tc_en.entity_id=t.collection_id
       AND tc_en.locale='en' AND tc_en.field='name'
     WHERE t.status = 'published'
       AND (
         t.slug ILIKE '%' || ${term} || '%'
-        OR immutable_unaccent(COALESCE(tn.value, tn_en.value, '')) ILIKE '%' || immutable_unaccent(${term}) || '%'
+        OR infi_immutable_unaccent(COALESCE(tn.value, tn_en.value, '')) ILIKE '%' || infi_immutable_unaccent(${term}) || '%'
       )
     LIMIT 1
   `;
@@ -303,22 +299,22 @@ async function getConceptsForQuestionAndTradition(
         COALESCE(tn.value, tn_en.value, c.slug) AS name,
         COALESCE(ts.value, ts_en.value, '') AS summary,
         COALESCE(tt.value, tt_en.value) AS tradition_name
-      FROM edge eq
-      JOIN concept c ON c.id = eq.to_id AND c.status = 'published'
-      LEFT JOIN edge et ON et.from_type='concept' AND et.from_id=c.id
+      FROM infi_edge eq
+      JOIN infi_concept c ON c.id = eq.to_id AND c.status = 'published'
+      LEFT JOIN infi_edge et ON et.from_type='concept' AND et.from_id=c.id
         AND et.to_type='tradition' AND et.to_id=${traditionId}
         AND et.approved_at IS NOT NULL
-      LEFT JOIN translation tn ON tn.entity_type='concept' AND tn.entity_id=c.id
+      LEFT JOIN infi_translation tn ON tn.entity_type='concept' AND tn.entity_id=c.id
         AND tn.locale=${locale} AND tn.field='name'
-      LEFT JOIN translation tn_en ON tn_en.entity_type='concept' AND tn_en.entity_id=c.id
+      LEFT JOIN infi_translation tn_en ON tn_en.entity_type='concept' AND tn_en.entity_id=c.id
         AND tn_en.locale='en' AND tn_en.field='name'
-      LEFT JOIN translation ts ON ts.entity_type='concept' AND ts.entity_id=c.id
+      LEFT JOIN infi_translation ts ON ts.entity_type='concept' AND ts.entity_id=c.id
         AND ts.locale=${locale} AND ts.field='summary'
-      LEFT JOIN translation ts_en ON ts_en.entity_type='concept' AND ts_en.entity_id=c.id
+      LEFT JOIN infi_translation ts_en ON ts_en.entity_type='concept' AND ts_en.entity_id=c.id
         AND ts_en.locale='en' AND ts_en.field='summary'
-      LEFT JOIN translation tt ON tt.entity_type='tradition' AND tt.entity_id=c.tradition_id
+      LEFT JOIN infi_translation tt ON tt.entity_type='tradition' AND tt.entity_id=c.tradition_id
         AND tt.locale=${locale} AND tt.field='name'
-      LEFT JOIN translation tt_en ON tt_en.entity_type='tradition' AND tt_en.entity_id=c.tradition_id
+      LEFT JOIN infi_translation tt_en ON tt_en.entity_type='tradition' AND tt_en.entity_id=c.tradition_id
         AND tt_en.locale='en' AND tt_en.field='name'
       WHERE eq.from_type='question' AND eq.from_id=${questionId}
         AND eq.to_type='concept' AND eq.approved_at IS NOT NULL
@@ -332,19 +328,19 @@ async function getConceptsForQuestionAndTradition(
       COALESCE(tn.value, tn_en.value, c.slug) AS name,
       COALESCE(ts.value, ts_en.value, '') AS summary,
       COALESCE(tt.value, tt_en.value) AS tradition_name
-    FROM edge eq
-    JOIN concept c ON c.id = eq.to_id AND c.status = 'published'
-    LEFT JOIN translation tn ON tn.entity_type='concept' AND tn.entity_id=c.id
+    FROM infi_edge eq
+    JOIN infi_concept c ON c.id = eq.to_id AND c.status = 'published'
+    LEFT JOIN infi_translation tn ON tn.entity_type='concept' AND tn.entity_id=c.id
       AND tn.locale=${locale} AND tn.field='name'
-    LEFT JOIN translation tn_en ON tn_en.entity_type='concept' AND tn_en.entity_id=c.id
+    LEFT JOIN infi_translation tn_en ON tn_en.entity_type='concept' AND tn_en.entity_id=c.id
       AND tn_en.locale='en' AND tn_en.field='name'
-    LEFT JOIN translation ts ON ts.entity_type='concept' AND ts.entity_id=c.id
+    LEFT JOIN infi_translation ts ON ts.entity_type='concept' AND ts.entity_id=c.id
       AND ts.locale=${locale} AND ts.field='summary'
-    LEFT JOIN translation ts_en ON ts_en.entity_type='concept' AND ts_en.entity_id=c.id
+    LEFT JOIN infi_translation ts_en ON ts_en.entity_type='concept' AND ts_en.entity_id=c.id
       AND ts_en.locale='en' AND ts_en.field='summary'
-    LEFT JOIN translation tt ON tt.entity_type='tradition' AND tt.entity_id=c.tradition_id
+    LEFT JOIN infi_translation tt ON tt.entity_type='tradition' AND tt.entity_id=c.tradition_id
       AND tt.locale=${locale} AND tt.field='name'
-    LEFT JOIN translation tt_en ON tt_en.entity_type='tradition' AND tt_en.entity_id=c.tradition_id
+    LEFT JOIN infi_translation tt_en ON tt_en.entity_type='tradition' AND tt_en.entity_id=c.tradition_id
       AND tt_en.locale='en' AND tt_en.field='name'
     WHERE eq.from_type='question' AND eq.from_id=${questionId}
       AND eq.to_type='concept' AND eq.approved_at IS NOT NULL
@@ -361,10 +357,10 @@ async function getRelatedConcepts(
     SELECT e.from_type, e.from_id, e.to_type, e.to_id, e.relation,
       e.weight::float AS weight,
       COALESCE(tn.value, tn_en.value, e.to_id) AS to_name
-    FROM edge e
-    LEFT JOIN translation tn ON tn.entity_type=e.to_type AND tn.entity_id=e.to_id
+    FROM infi_edge e
+    LEFT JOIN infi_translation tn ON tn.entity_type=e.to_type AND tn.entity_id=e.to_id
       AND tn.locale=${locale} AND tn.field='name'
-    LEFT JOIN translation tn_en ON tn_en.entity_type=e.to_type AND tn_en.entity_id=e.to_id
+    LEFT JOIN infi_translation tn_en ON tn_en.entity_type=e.to_type AND tn_en.entity_id=e.to_id
       AND tn_en.locale='en' AND tn_en.field='name'
     WHERE e.from_type='concept' AND e.from_id = ANY(${conceptIds})
       AND e.to_type='concept' AND e.approved_at IS NOT NULL
@@ -380,14 +376,14 @@ async function getAuthors(
     SELECT a.id, a.slug, a.birth_year, a.death_year,
       COALESCE(tn.value, tn_en.value, a.slug) AS name,
       COALESCE(ts.value, ts_en.value, '') AS summary
-    FROM author a
-    LEFT JOIN translation tn ON tn.entity_type='author' AND tn.entity_id=a.id
+    FROM infi_author a
+    LEFT JOIN infi_translation tn ON tn.entity_type='author' AND tn.entity_id=a.id
       AND tn.locale=${locale} AND tn.field='name'
-    LEFT JOIN translation tn_en ON tn_en.entity_type='author' AND tn_en.entity_id=a.id
+    LEFT JOIN infi_translation tn_en ON tn_en.entity_type='author' AND tn_en.entity_id=a.id
       AND tn_en.locale='en' AND tn_en.field='name'
-    LEFT JOIN translation ts ON ts.entity_type='author' AND ts.entity_id=a.id
+    LEFT JOIN infi_translation ts ON ts.entity_type='author' AND ts.entity_id=a.id
       AND ts.locale=${locale} AND ts.field='summary'
-    LEFT JOIN translation ts_en ON ts_en.entity_type='author' AND ts_en.entity_id=a.id
+    LEFT JOIN infi_translation ts_en ON ts_en.entity_type='author' AND ts_en.entity_id=a.id
       AND ts_en.locale='en' AND ts_en.field='summary'
     WHERE a.tradition_id = ${traditionId} AND a.status = 'published'
     ORDER BY a.birth_year NULLS LAST
@@ -403,18 +399,18 @@ async function getWorks(
       COALESCE(tn.value, tn_en.value, w.slug) AS name,
       COALESCE(ts.value, ts_en.value, '') AS summary,
       COALESCE(ta.value, ta_en.value) AS author_name
-    FROM work w
-    LEFT JOIN translation tn ON tn.entity_type='work' AND tn.entity_id=w.id
+    FROM infi_work w
+    LEFT JOIN infi_translation tn ON tn.entity_type='work' AND tn.entity_id=w.id
       AND tn.locale=${locale} AND tn.field='name'
-    LEFT JOIN translation tn_en ON tn_en.entity_type='work' AND tn_en.entity_id=w.id
+    LEFT JOIN infi_translation tn_en ON tn_en.entity_type='work' AND tn_en.entity_id=w.id
       AND tn_en.locale='en' AND tn_en.field='name'
-    LEFT JOIN translation ts ON ts.entity_type='work' AND ts.entity_id=w.id
+    LEFT JOIN infi_translation ts ON ts.entity_type='work' AND ts.entity_id=w.id
       AND ts.locale=${locale} AND ts.field='summary'
-    LEFT JOIN translation ts_en ON ts_en.entity_type='work' AND ts_en.entity_id=w.id
+    LEFT JOIN infi_translation ts_en ON ts_en.entity_type='work' AND ts_en.entity_id=w.id
       AND ts_en.locale='en' AND ts_en.field='summary'
-    LEFT JOIN translation ta ON ta.entity_type='author' AND ta.entity_id=w.author_id
+    LEFT JOIN infi_translation ta ON ta.entity_type='author' AND ta.entity_id=w.author_id
       AND ta.locale=${locale} AND ta.field='name'
-    LEFT JOIN translation ta_en ON ta_en.entity_type='author' AND ta_en.entity_id=w.author_id
+    LEFT JOIN infi_translation ta_en ON ta_en.entity_type='author' AND ta_en.entity_id=w.author_id
       AND ta_en.locale='en' AND ta_en.field='name'
     WHERE w.tradition_id = ${traditionId} AND w.status = 'published'
     ORDER BY w.composed_start NULLS LAST
@@ -429,14 +425,14 @@ async function getPractices(
     SELECT p.id, p.slug,
       COALESCE(tn.value, tn_en.value, p.slug) AS name,
       COALESCE(ts.value, ts_en.value, '') AS summary
-    FROM practice p
-    LEFT JOIN translation tn ON tn.entity_type='practice' AND tn.entity_id=p.id
+    FROM infi_practice p
+    LEFT JOIN infi_translation tn ON tn.entity_type='practice' AND tn.entity_id=p.id
       AND tn.locale=${locale} AND tn.field='name'
-    LEFT JOIN translation tn_en ON tn_en.entity_type='practice' AND tn_en.entity_id=p.id
+    LEFT JOIN infi_translation tn_en ON tn_en.entity_type='practice' AND tn_en.entity_id=p.id
       AND tn_en.locale='en' AND tn_en.field='name'
-    LEFT JOIN translation ts ON ts.entity_type='practice' AND ts.entity_id=p.id
+    LEFT JOIN infi_translation ts ON ts.entity_type='practice' AND ts.entity_id=p.id
       AND ts.locale=${locale} AND ts.field='summary'
-    LEFT JOIN translation ts_en ON ts_en.entity_type='practice' AND ts_en.entity_id=p.id
+    LEFT JOIN infi_translation ts_en ON ts_en.entity_type='practice' AND ts_en.entity_id=p.id
       AND ts_en.locale='en' AND ts_en.field='summary'
     WHERE p.tradition_id = ${traditionId} AND p.status = 'published'
   `;
@@ -450,14 +446,14 @@ async function getSymbols(
     SELECT s.id, s.slug, s.unicode_char,
       COALESCE(tn.value, tn_en.value, s.slug) AS name,
       COALESCE(ts.value, ts_en.value, '') AS summary
-    FROM symbol s
-    LEFT JOIN translation tn ON tn.entity_type='symbol' AND tn.entity_id=s.id
+    FROM infi_symbol s
+    LEFT JOIN infi_translation tn ON tn.entity_type='symbol' AND tn.entity_id=s.id
       AND tn.locale=${locale} AND tn.field='name'
-    LEFT JOIN translation tn_en ON tn_en.entity_type='symbol' AND tn_en.entity_id=s.id
+    LEFT JOIN infi_translation tn_en ON tn_en.entity_type='symbol' AND tn_en.entity_id=s.id
       AND tn_en.locale='en' AND tn_en.field='name'
-    LEFT JOIN translation ts ON ts.entity_type='symbol' AND ts.entity_id=s.id
+    LEFT JOIN infi_translation ts ON ts.entity_type='symbol' AND ts.entity_id=s.id
       AND ts.locale=${locale} AND ts.field='summary'
-    LEFT JOIN translation ts_en ON ts_en.entity_type='symbol' AND ts_en.entity_id=s.id
+    LEFT JOIN infi_translation ts_en ON ts_en.entity_type='symbol' AND ts_en.entity_id=s.id
       AND ts_en.locale='en' AND ts_en.field='summary'
     WHERE s.tradition_id = ${traditionId} AND s.status = 'published'
   `;
@@ -474,11 +470,11 @@ async function getCitations(
         s.publisher AS source_publisher, s.url_canonical AS source_url,
         s.doi AS source_doi, s.isbn AS source_isbn, s.license AS source_license,
         ct.locator, ct.claim_text, ct.quote
-      FROM living_page lp
-      JOIN documentary d ON d.id = lp.documentary_id
-      JOIN living_page_citation lpc ON lpc.living_page_id = lp.id
-      JOIN citation ct ON ct.id = lpc.citation_id
-      JOIN source s ON s.id = ct.source_id
+      FROM infi_living_page lp
+      JOIN infi_documentary d ON d.id = lp.documentary_id
+      JOIN infi_living_page_citation lpc ON lpc.living_page_id = lp.id
+      JOIN infi_citation ct ON ct.id = lpc.citation_id
+      JOIN infi_source s ON s.id = ct.source_id
       WHERE lp.question_id = ${questionId}
         AND d.tradition_id = ${traditionId}
         AND lp.status = 'published'
@@ -492,10 +488,10 @@ async function getCitations(
       s.publisher AS source_publisher, s.url_canonical AS source_url,
       s.doi AS source_doi, s.isbn AS source_isbn, s.license AS source_license,
       ct.locator, ct.claim_text, ct.quote
-    FROM living_page lp
-    JOIN living_page_citation lpc ON lpc.living_page_id = lp.id
-    JOIN citation ct ON ct.id = lpc.citation_id
-    JOIN source s ON s.id = ct.source_id
+    FROM infi_living_page lp
+    JOIN infi_living_page_citation lpc ON lpc.living_page_id = lp.id
+    JOIN infi_citation ct ON ct.id = lpc.citation_id
+    JOIN infi_source s ON s.id = ct.source_id
     WHERE lp.question_id = ${questionId}
       AND lp.status = 'published'
     ORDER BY s.reliability_tier, s.year NULLS LAST
@@ -509,14 +505,14 @@ async function getDerivedTraditions(
   return sql<DerivedTraditionRow[]>`
     SELECT t.id, t.slug, e.relation,
       COALESCE(tn.value, tn_en.value, t.slug) AS name
-    FROM edge e
-    JOIN tradition t ON (
+    FROM infi_edge e
+    JOIN infi_tradition t ON (
       (e.from_type='tradition' AND e.from_id=${traditionId} AND t.id=e.to_id)
       OR (e.to_type='tradition' AND e.to_id=${traditionId} AND t.id=e.from_id)
     )
-    LEFT JOIN translation tn ON tn.entity_type='tradition' AND tn.entity_id=t.id
+    LEFT JOIN infi_translation tn ON tn.entity_type='tradition' AND tn.entity_id=t.id
       AND tn.locale=${locale} AND tn.field='name'
-    LEFT JOIN translation tn_en ON tn_en.entity_type='tradition' AND tn_en.entity_id=t.id
+    LEFT JOIN infi_translation tn_en ON tn_en.entity_type='tradition' AND tn_en.entity_id=t.id
       AND tn_en.locale='en' AND tn_en.field='name'
     WHERE (e.from_type='tradition' AND e.from_id=${traditionId} AND e.to_type='tradition')
       OR (e.to_type='tradition' AND e.to_id=${traditionId} AND e.from_type='tradition')
@@ -535,22 +531,22 @@ async function getAllTraditionsForQuestion(
       COALESCE(tn.value, tn_en.value, t.slug) AS name,
       COALESCE(ts.value, ts_en.value, '') AS summary,
       COALESCE(tc.value, tc_en.value) AS collection_name
-    FROM edge e1
-    JOIN concept c ON c.id = e1.to_id AND c.status = 'published'
-    JOIN edge e2 ON e2.from_type='concept' AND e2.from_id=c.id
+    FROM infi_edge e1
+    JOIN infi_concept c ON c.id = e1.to_id AND c.status = 'published'
+    JOIN infi_edge e2 ON e2.from_type='concept' AND e2.from_id=c.id
       AND e2.to_type='tradition' AND e2.approved_at IS NOT NULL
-    JOIN tradition t ON t.id = e2.to_id AND t.status = 'published'
-    LEFT JOIN translation tn ON tn.entity_type='tradition' AND tn.entity_id=t.id
+    JOIN infi_tradition t ON t.id = e2.to_id AND t.status = 'published'
+    LEFT JOIN infi_translation tn ON tn.entity_type='tradition' AND tn.entity_id=t.id
       AND tn.locale=${locale} AND tn.field='name'
-    LEFT JOIN translation tn_en ON tn_en.entity_type='tradition' AND tn_en.entity_id=t.id
+    LEFT JOIN infi_translation tn_en ON tn_en.entity_type='tradition' AND tn_en.entity_id=t.id
       AND tn_en.locale='en' AND tn_en.field='name'
-    LEFT JOIN translation ts ON ts.entity_type='tradition' AND ts.entity_id=t.id
+    LEFT JOIN infi_translation ts ON ts.entity_type='tradition' AND ts.entity_id=t.id
       AND ts.locale=${locale} AND ts.field='summary'
-    LEFT JOIN translation ts_en ON ts_en.entity_type='tradition' AND ts_en.entity_id=t.id
+    LEFT JOIN infi_translation ts_en ON ts_en.entity_type='tradition' AND ts_en.entity_id=t.id
       AND ts_en.locale='en' AND ts_en.field='summary'
-    LEFT JOIN translation tc ON tc.entity_type='collection' AND tc.entity_id=t.collection_id
+    LEFT JOIN infi_translation tc ON tc.entity_type='collection' AND tc.entity_id=t.collection_id
       AND tc.locale=${locale} AND tc.field='name'
-    LEFT JOIN translation tc_en ON tc_en.entity_type='collection' AND tc_en.entity_id=t.collection_id
+    LEFT JOIN infi_translation tc_en ON tc_en.entity_type='collection' AND tc_en.entity_id=t.collection_id
       AND tc_en.locale='en' AND tc_en.field='name'
     WHERE e1.from_type='question' AND e1.from_id=${questionId}
       AND e1.to_type='concept' AND e1.approved_at IS NOT NULL
@@ -783,16 +779,16 @@ function generateBrief(
 async function listEntities(locale: string) {
   const questions = await sql<{ slug: string; title: string }[]>`
     SELECT q.slug, COALESCE(t.value, q.slug) AS title
-    FROM question q
-    LEFT JOIN translation t ON t.entity_type='question' AND t.entity_id=q.id
+    FROM infi_question q
+    LEFT JOIN infi_translation t ON t.entity_type='question' AND t.entity_id=q.id
       AND t.locale=${locale} AND t.field='title'
     WHERE q.status = 'published' ORDER BY q.sort_order
   `;
 
   const traditions = await sql<{ slug: string; name: string }[]>`
     SELECT t.slug, COALESCE(tn.value, t.slug) AS name
-    FROM tradition t
-    LEFT JOIN translation tn ON tn.entity_type='tradition' AND tn.entity_id=t.id
+    FROM infi_tradition t
+    LEFT JOIN infi_translation tn ON tn.entity_type='tradition' AND tn.entity_id=t.id
       AND tn.locale=${locale} AND tn.field='name'
     WHERE t.status = 'published' ORDER BY t.slug
   `;

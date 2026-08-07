@@ -1,13 +1,9 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import postgres from "postgres";
-
-const connectionString =
-  process.env["DATABASE_URL"] ??
-  "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
+import { createSql } from "./connection.js";
 
 async function seed() {
-  const sql = postgres(connectionString);
+  const sql = createSql();
 
   try {
     const seedFile = join(import.meta.dirname, "..", "seeds", "seed.sql");
