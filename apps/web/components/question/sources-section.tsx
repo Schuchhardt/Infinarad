@@ -15,67 +15,71 @@ function formatSourceRef(s: SourceData): string {
   return parts.join(". ") + ".";
 }
 
+const ICON = (
+  <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#C6A66B" strokeWidth="1.1">
+    <path d="M2 4h12M2 8h12M2 12h8"/>
+  </svg>
+);
+
 export function SourcesSection({ sources, title }: SourcesSectionProps) {
   if (sources.length === 0) return null;
 
   return (
-    <section
-      className="bg-accent/10 px-6 py-16"
-      aria-labelledby="sources-heading"
-    >
-      <div className="mx-auto max-w-4xl">
-        <SectionHeading
-          id="sources-heading"
-          title={title}
-          count={sources.length}
-        />
-        <ol className="list-none space-y-8 p-0">
-          {sources.map((s, i) => (
-            <li key={`${s.id}-${i}`} className="border-b border-border pb-6 last:border-0">
-              <div className="flex items-start gap-4">
-                <span className="mt-1 shrink-0 text-xs font-medium text-muted/40 tabular-nums">
-                  [{i + 1}]
+    <section id="s8" className="scroll-mt-[84px] mt-[68px]" aria-labelledby="sources-heading">
+      <SectionHeading id="sources-heading" title={title} count={sources.length} icon={ICON} />
+      <div className="flex flex-col border border-border" style={{ gap: "1px", background: "#232D39" }}>
+        {sources.map((s, i) => (
+          <div
+            key={`${s.id}-${i}`}
+            className="bg-background p-[22px_24px] flex gap-5 items-start transition-colors hover:bg-surface"
+          >
+            <span className="shrink-0 text-[10.5px] text-dim tabular-nums mt-[5px] w-7 text-right">
+              [{i + 1}]
+            </span>
+            <div className="flex-1 min-w-0 flex flex-col gap-[8px]">
+              <span className="text-[13.5px] text-text/90 leading-[1.6]">
+                {formatSourceRef(s)}
+              </span>
+              <div className="flex items-center gap-3">
+                <span className="text-[9.5px] font-medium uppercase tracking-[0.14em] text-gold/60">
+                  {s.kind.replace("_", " ")}
                 </span>
-                <div className="flex-1">
-                  <p className="text-sm text-text/90">
-                    {formatSourceRef(s)}
-                  </p>
-                  <p className="mt-2 text-sm text-muted">
-                    <span className="text-[0.65rem] font-medium uppercase tracking-wider text-gold/50">
-                      {s.kind.replace("_", " ")}
-                    </span>
-                    {" · "}
-                    {s.locator}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted/80">
-                    {s.claim_text}
-                  </p>
-                  {s.quote && (
-                    <blockquote className="mt-3 border-s-2 border-gold/30 ps-4 font-display text-sm italic text-text/70">
-                      &ldquo;{s.quote}&rdquo;
-                    </blockquote>
-                  )}
-                  {(s.doi || s.url_canonical || s.isbn) && (
-                    <div className="mt-2 flex flex-wrap gap-3 text-[0.6rem] font-medium text-muted/50">
-                      {s.doi && <span>DOI: {s.doi}</span>}
-                      {s.isbn && <span>ISBN: {s.isbn}</span>}
-                      {s.url_canonical && (
-                        <a
-                          href={s.url_canonical}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-accent/60 underline-offset-2 hover:underline"
-                        >
-                          source
-                        </a>
-                      )}
-                    </div>
+                {s.locator && (
+                  <span className="text-[10.5px] text-dim">{s.locator}</span>
+                )}
+              </div>
+              {s.claim_text && (
+                <span className="text-[13px] leading-[1.7] text-muted">{s.claim_text}</span>
+              )}
+              {s.quote && (
+                <blockquote className="border-l-2 border-gold/30 pl-4 font-display text-[14px] italic text-text/60 leading-[1.7]">
+                  &ldquo;{s.quote}&rdquo;
+                </blockquote>
+              )}
+              {(s.doi || s.url_canonical || s.isbn) && (
+                <div className="flex flex-wrap gap-3 text-[9.5px] text-dim">
+                  {s.doi && <span>DOI: {s.doi}</span>}
+                  {s.isbn && <span>ISBN: {s.isbn}</span>}
+                  {s.url_canonical && (
+                    <a
+                      href={s.url_canonical}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent underline-offset-2 hover:underline"
+                    >
+                      source
+                    </a>
                   )}
                 </div>
+              )}
+              <div className="flex gap-[2px] h-[4px] mt-1">
+                <div className="flex-1 rounded-[1px]" style={{ background: "#C6A66B", opacity: 0.7 }} />
+                <div className="flex-1 rounded-[1px]" style={{ background: "#506C86", opacity: 0.35 }} />
+                <div className="flex-1 rounded-[1px]" style={{ background: "#3E4A57", opacity: 0.18 }} />
               </div>
-            </li>
-          ))}
-        </ol>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

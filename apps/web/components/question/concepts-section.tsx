@@ -6,56 +6,43 @@ interface ConceptsSectionProps {
   title: string;
 }
 
+const ICON = (
+  <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#C6A66B" strokeWidth="1.1">
+    <path d="M8 1.8 14.2 8 8 14.2 1.8 8z"/>
+  </svg>
+);
+
 export function ConceptsSection({ concepts, title }: ConceptsSectionProps) {
   if (concepts.length === 0) return null;
 
   return (
-    <section className="px-6 py-16" aria-labelledby="concepts-heading">
-      <div className="mx-auto max-w-4xl">
-        <SectionHeading
-          id="concepts-heading"
-          title={title}
-          count={concepts.length}
-        />
-        <div className="grid gap-6 sm:grid-cols-2">
-          {concepts.map((c) => (
-            <div
-              key={c.id}
-              className="rounded-sm border border-border bg-surface/50 p-6 transition-colors hover:border-gold/30"
-            >
-              <div className="mb-3 flex items-baseline gap-3">
-                {c.original_script && (
-                  <span className="font-display text-2xl text-gold/80">
-                    {c.original_script}
-                  </span>
-                )}
-                <div>
-                  <h3
-                    className="font-display text-lg text-text"
-                    lang={c.is_fallback ? "en" : undefined}
-                  >
-                    {c.name}
-                  </h3>
-                  {c.transliteration && (
-                    <span className="text-xs font-medium text-muted/60 italic">
-                      {c.transliteration}
-                    </span>
-                  )}
-                </div>
-              </div>
-              {c.summary && (
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  {c.summary}
-                </p>
+    <section id="s1" className="scroll-mt-[84px]" aria-labelledby="concepts-heading">
+      <SectionHeading id="concepts-heading" title={title} count={concepts.length} icon={ICON} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 border border-border" style={{ gap: "1px", background: "#232D39" }}>
+        {concepts.map((c) => (
+          <div
+            key={c.id}
+            className="bg-background p-[22px_24px] flex flex-col gap-2 transition-colors hover:bg-surface"
+          >
+            <div className="flex items-baseline gap-[10px] flex-wrap">
+              <span className="font-display text-xl">{c.name}</span>
+              {c.original_script && (
+                <span className="font-display text-[17px] text-gold">{c.original_script}</span>
               )}
-              {c.tradition_name && (
-                <span className="mt-3 inline-block text-[0.65rem] font-medium uppercase tracking-wider text-accent/80">
-                  {c.tradition_name}
-                </span>
+              {c.transliteration && (
+                <span className="text-[11px] italic text-dim">{c.transliteration}</span>
               )}
             </div>
-          ))}
-        </div>
+            {c.summary && (
+              <span className="text-[13.5px] leading-[1.7] text-muted">{c.summary}</span>
+            )}
+            {c.tradition_name && (
+              <span className="text-[9.5px] font-medium tracking-[0.12em] uppercase text-gold/60 mt-0.5">
+                {c.tradition_name}
+              </span>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );

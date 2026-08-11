@@ -2,18 +2,20 @@
 
 @theme {
   --color-background: #090B0F;
+  --color-page-bg: #06070A;
   --color-surface: #10151D;
   --color-card: #171D26;
   --color-border: #232D39;
   --color-text: #F3F2EE;
   --color-muted: #9AA5B3;
+  --color-dim: #5F6B79;
+  --color-faint: #3E4A57;
   --color-gold: #C6A66B;
   --color-gold-hover: #D8B97C;
   --color-accent: #506C86;
 
-  --font-display: var(--font-cormorant), 'Noto Serif', Georgia, serif;
-  --font-body: var(--font-inter), 'Noto Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-inter), system-ui, monospace;
+  --font-display: var(--font-spectral), Georgia, serif;
+  --font-body: var(--font-syne), system-ui, sans-serif;
 }
 
 html {
@@ -24,38 +26,23 @@ body {
   font-family: var(--font-body);
   font-weight: 400;
   line-height: 1.7;
-  background-color: var(--color-background);
+  background-color: var(--color-page-bg);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(80, 108, 134, 0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 30% 70%, rgba(198, 166, 107, 0.03) 0%, transparent 60%);
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.02;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 256px 256px;
-}
-
 ::selection {
   background-color: var(--color-gold);
   color: var(--color-background);
+}
+
+a {
+  color: var(--color-gold);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--color-gold-hover);
 }
 
 .section-container {
@@ -70,82 +57,63 @@ body::after {
   }
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    filter: blur(4px);
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-    transform: scale(1);
-  }
-}
+/* Scrollbar */
+::-webkit-scrollbar { height: 6px; width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(243, 242, 238, 0.14); border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
 
-@keyframes draw-line {
-  from { transform: scaleY(0); }
-  to { transform: scaleY(1); }
-}
-
-@keyframes script-cycle {
-  0%, 16% { opacity: 1; }
-  20%, 96% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
+/* Animations */
 @keyframes pulse-glow {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.85; }
 }
 
-.reveal {
-  opacity: 0;
-  filter: blur(4px);
-  transform: scale(0.98);
-  transition: opacity 700ms ease-out, filter 700ms ease-out, transform 700ms ease-out;
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
 }
 
-.reveal.visible {
-  opacity: 1;
-  filter: blur(0);
-  transform: scale(1);
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
+@keyframes spin-slow {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0); }
+}
+
+@keyframes ring-out {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+@keyframes dash-flow {
+  to { stroke-dashoffset: -40; }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-18px, 12px); }
+}
+
+@keyframes sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(240%); }
+}
+
+/* Utility classes */
 .animate-fade-in {
   animation: fade-in 800ms ease-out both;
 }
 
-.stagger-1 { transition-delay: 100ms; }
-.stagger-2 { transition-delay: 200ms; }
-.stagger-3 { transition-delay: 300ms; }
-.stagger-4 { transition-delay: 400ms; }
-.stagger-5 { transition-delay: 500ms; }
-
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.hero-bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 120% 80% at 50% 20%, rgba(80, 108, 134, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 50% at 20% 80%, rgba(198, 166, 107, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 60% at 80% 60%, rgba(80, 108, 134, 0.05) 0%, transparent 50%);
-}
-
-.hero-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 256px 256px;
+.animate-fade-up {
+  animation: fade-up 700ms ease-out both;
 }
 
 .constellation-dot {
@@ -158,41 +126,39 @@ body::after {
 }
 
 .glass-nav {
-  backdrop-filter: blur(10px);
-  background-color: rgba(9, 11, 15, 0.7);
+  backdrop-filter: blur(12px);
+  background-color: rgba(9, 11, 15, 0.72);
   border-bottom: 1px solid rgba(35, 45, 57, 0.5);
-  transition: backdrop-filter 500ms ease, background-color 500ms ease, border-color 500ms ease;
 }
 
-.glass-nav.at-top {
-  backdrop-filter: none;
-  background-color: transparent;
-  border-bottom-color: transparent;
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 700ms ease-out, transform 700ms ease-out;
 }
 
-.timeline-line {
-  transform-origin: top center;
-  animation: draw-line 1.5s ease-out both;
+.reveal.visible {
+  opacity: 1;
+  transform: none;
 }
+
+.stagger-1 { transition-delay: 55ms; }
+.stagger-2 { transition-delay: 110ms; }
+.stagger-3 { transition-delay: 165ms; }
+.stagger-4 { transition-delay: 220ms; }
+.stagger-5 { transition-delay: 275ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;
-    filter: none;
     transform: none;
     transition: none;
   }
-  .animate-fade-in {
+  .animate-fade-in,
+  .animate-fade-up {
     animation: none;
     opacity: 1;
-  }
-  .script-line {
-    opacity: 1 !important;
-    animation: none !important;
-  }
-  .timeline-line {
-    animation: none;
-    transform: scaleY(1);
   }
   .constellation-dot {
     animation: none;

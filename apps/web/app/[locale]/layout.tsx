@@ -1,22 +1,23 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Syne, Spectral } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import "@/app/globals.css";
 
-const cormorant = Cormorant_Garamond({
+const syne = Syne({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-cormorant",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-syne",
   display: "swap",
 });
 
-const inter = Inter({
+const spectral = Spectral({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-inter",
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-spectral",
   display: "swap",
 });
 
@@ -81,7 +82,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const dir = RTL_LOCALES.has(locale) ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir={dir} className={`antialiased ${cormorant.variable} ${inter.variable}`}>
+    <html lang={locale} dir={dir} className={`antialiased ${syne.variable} ${spectral.variable}`}>
       <head />
       <body className="min-h-screen bg-background text-text">
         <NextIntlClientProvider locale={locale} messages={messages}>

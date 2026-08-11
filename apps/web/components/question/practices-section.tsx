@@ -6,42 +6,35 @@ interface PracticesSectionProps {
   title: string;
 }
 
+const ICON = (
+  <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#C6A66B" strokeWidth="1.1">
+    <circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2.4"/>
+  </svg>
+);
+
 export function PracticesSection({ practices, title }: PracticesSectionProps) {
   if (practices.length === 0) return null;
 
   return (
-    <section className="px-6 py-16" aria-labelledby="practices-heading">
-      <div className="mx-auto max-w-4xl">
-        <SectionHeading
-          id="practices-heading"
-          title={title}
-          count={practices.length}
-        />
-        <div className="grid gap-6 sm:grid-cols-2">
-          {practices.map((p) => (
-            <div
-              key={p.id}
-              className="rounded-sm border border-border bg-surface/50 p-6 transition-colors hover:border-gold/30"
-            >
-              <h3
-                className="font-display text-lg text-text"
-                lang={p.is_fallback ? "en" : undefined}
-              >
-                {p.name}
-              </h3>
-              {p.tradition_name && (
-                <span className="mt-1 inline-block text-[0.65rem] font-medium uppercase tracking-wider text-accent/80">
-                  {p.tradition_name}
-                </span>
-              )}
-              {p.summary && (
-                <p className="mt-3 text-sm leading-relaxed text-muted">
-                  {p.summary}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
+    <section id="s5" className="scroll-mt-[84px] mt-[68px]" aria-labelledby="practices-heading">
+      <SectionHeading id="practices-heading" title={title} count={practices.length} icon={ICON} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {practices.map((p) => (
+          <div
+            key={p.id}
+            className="border border-border p-[20px_22px] flex flex-col gap-[7px]"
+          >
+            <span className="font-display text-[19px]">{p.name}</span>
+            {p.tradition_name && (
+              <span className="text-[9.5px] font-medium tracking-[0.14em] uppercase text-gold/60">
+                {p.tradition_name}
+              </span>
+            )}
+            {p.summary && (
+              <span className="text-[13px] leading-[1.7] text-muted">{p.summary}</span>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );

@@ -26,6 +26,18 @@ const LABELS: Record<string, Record<string, string>> = {
     ja: "問いを検索...",
     he: "חפש שאלה...",
   },
+  search: {
+    en: "Search",
+    es: "Buscar",
+    pt: "Buscar",
+    fr: "Chercher",
+    de: "Suchen",
+    ar: "بحث",
+    hi: "खोजें",
+    zh: "搜索",
+    ja: "検索",
+    he: "חיפוש",
+  },
   results: {
     en: "Results",
     es: "Resultados",
@@ -74,6 +86,18 @@ const LABELS: Record<string, Record<string, string>> = {
     ja: "ホームに戻る",
     he: "חזרה לדף הבית",
   },
+  suggest: {
+    en: "Try exploring",
+    es: "Prueba explorar",
+    pt: "Tente explorar",
+    fr: "Essayez d'explorer",
+    de: "Versuchen Sie",
+    ar: "جرب استكشاف",
+    hi: "अन्वेषण करें",
+    zh: "试试探索",
+    ja: "探索してみる",
+    he: "נסו לחקור",
+  },
 };
 
 function t(key: string, locale: string): string {
@@ -104,24 +128,14 @@ export default async function SearchPage({ params, searchParams }: Props) {
   return (
     <>
       <Nav locale={locale} locales={activeLocales} />
-      <main className="min-h-screen pt-20">
+      <main className="min-h-screen pt-16">
         <div className="px-6 pb-16 pt-24">
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto max-w-[860px]">
             <Link
               href="/"
-              className="mb-8 inline-flex items-center gap-2 text-xs font-medium text-muted/60 hover:text-gold transition-colors"
+              className="mb-8 inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.08em] uppercase text-dim hover:text-gold transition-colors"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m15 18-6-6 6-6" />
               </svg>
               {t("backHome", locale)}
@@ -132,36 +146,63 @@ export default async function SearchPage({ params, searchParams }: Props) {
                 locale={locale}
                 placeholder={t("searchPlaceholder", locale)}
                 suggestions={suggestions}
+                searchLabel={t("search", locale)}
               />
             </div>
 
-            <p className="mb-8 text-xs font-medium tracking-[0.3em] uppercase text-gold">
-              {query ? t("results", locale) : t("allQuestions", locale)}
-            </p>
+            {!query && featured.length > 0 && (
+              <div className="mb-12 flex flex-wrap gap-2 items-center">
+                <span className="text-[11px] tracking-[0.08em] uppercase text-dim mr-2">
+                  {t("suggest", locale)}
+                </span>
+                {featured.slice(0, 4).map((f) => (
+                  <Link
+                    key={f.slug}
+                    href={`/question/${f.slug}`}
+                    className="border border-border px-3 py-[6px] text-[12px] text-muted hover:text-text hover:border-gold/40 transition-colors"
+                  >
+                    {f.title.length > 40 ? f.title.slice(0, 40) + "..." : f.title}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            <div className="flex items-center gap-3 mb-8">
+              <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-gold">
+                {query ? t("results", locale) : t("allQuestions", locale)}
+              </span>
+              <span className="flex-1 h-px bg-border" />
+              <span className="text-[10px] text-dim tabular-nums">
+                {String(results.length).padStart(2, "0")}
+              </span>
+            </div>
 
             {results.length === 0 ? (
-              <p className="text-muted">{t("noResults", locale)}</p>
+              <p className="text-muted text-[14px]">{t("noResults", locale)}</p>
             ) : (
-              <ol className="list-none space-y-8 p-0">
+              <ol className="list-none space-y-0 p-0 border border-border" style={{ gap: "1px", background: "#232D39" }}>
                 {results.map((r, i) => (
-                  <li key={r.id}>
+                  <li key={r.id} className="bg-background">
                     <Link
                       href={`/question/${r.slug}`}
-                      className="group flex items-baseline gap-6"
+                      className="group flex items-baseline gap-5 p-[20px_22px] transition-colors hover:bg-surface"
+                      style={{ animationDelay: `${i * 60}ms` }}
                     >
-                      <span className="shrink-0 text-xs font-medium text-muted/40 tabular-nums">
+                      <span className="shrink-0 text-[10.5px] text-dim tabular-nums w-6 text-right">
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <h2
-                          className="font-display text-2xl text-text group-hover:text-gold transition-colors md:text-3xl"
+                          className="font-display text-[22px] leading-[1.3] text-text group-hover:text-gold transition-colors md:text-[26px]"
                           lang={r.is_fallback ? "en" : undefined}
                         >
                           {r.title}
                         </h2>
-                        <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
-                          {r.summary}
-                        </p>
+                        {r.summary && (
+                          <p className="mt-[6px] text-[13px] leading-[1.7] text-muted line-clamp-2">
+                            {r.summary}
+                          </p>
+                        )}
                       </div>
                     </Link>
                   </li>

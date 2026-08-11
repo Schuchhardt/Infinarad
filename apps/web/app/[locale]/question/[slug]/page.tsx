@@ -168,6 +168,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+interface SidebarSection {
+  id: string;
+  label: string;
+  count: number;
+}
+
 export default async function QuestionPage({ params }: Props) {
   const { locale, slug } = await params;
   const question = await getQuestionBySlug(slug, locale);
@@ -191,6 +197,17 @@ export default async function QuestionPage({ params }: Props) {
     getRelatedSymbols(traditionIds, locale),
   ]);
 
+  const sidebarSections: SidebarSection[] = [
+    { id: "s1", label: label("concepts", locale), count: concepts.length },
+    { id: "s2", label: label("traditions", locale), count: traditions.length },
+    { id: "s3", label: label("authors", locale), count: authors.length },
+    { id: "s4", label: label("works", locale), count: works.length },
+    { id: "s5", label: label("practices", locale), count: practices.length },
+    { id: "s6", label: label("symbols", locale), count: symbols.length },
+    { id: "s7", label: label("documentaries", locale), count: documentaries.length },
+    { id: "s8", label: label("sources", locale), count: sources.length },
+  ].filter((s) => s.count > 0);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -207,74 +224,87 @@ export default async function QuestionPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Nav locale={locale} locales={activeLocales} />
-      <main className="pt-20">
-        <header className="px-6 pb-16 pt-24">
-          <div className="mx-auto max-w-4xl">
+      <main className="pt-16">
+        <header className="px-6 pb-12 pt-24">
+          <div className="mx-auto max-w-[1120px]">
             <Link
               href="/"
-              className="mb-8 inline-flex items-center gap-2 text-xs font-medium text-muted/60 hover:text-gold transition-colors"
+              className="mb-8 inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.08em] uppercase text-dim hover:text-gold transition-colors"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m15 18-6-6 6-6" />
               </svg>
               {label("backToQuestions", locale)}
             </Link>
             <h1
-              className="font-display text-4xl leading-tight text-text md:text-6xl"
+              className="font-display text-[38px] leading-[1.15] text-text md:text-[54px]"
               lang={question.is_fallback ? "en" : undefined}
             >
               {question.title}
               {question.is_fallback && (
-                <span className="ms-4 inline-block align-middle rounded border border-muted/30 px-2 py-0.5 text-[0.6rem] font-medium uppercase tracking-wider text-muted">
+                <span className="ms-4 inline-block align-middle border border-muted/30 px-2 py-[3px] text-[9px] font-medium uppercase tracking-[0.12em] text-muted">
                   EN
                 </span>
               )}
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-              {question.summary}
-            </p>
+            {question.summary && (
+              <p className="mt-6 max-w-2xl text-[16px] leading-[1.75] text-muted">
+                {question.summary}
+              </p>
+            )}
           </div>
         </header>
 
-        <ConceptsSection
-          concepts={concepts}
-          title={label("concepts", locale)}
-        />
-        <TraditionsSection
-          traditions={traditions}
-          title={label("traditions", locale)}
-        />
-        <AuthorsSection
-          authors={authors}
-          title={label("authors", locale)}
-        />
-        <WorksSection works={works} title={label("works", locale)} />
-        <PracticesSection
-          practices={practices}
-          title={label("practices", locale)}
-        />
-        <SymbolsSection
-          symbols={symbols}
-          title={label("symbols", locale)}
-        />
-        <DocumentariesSection
-          documentaries={documentaries}
-          title={label("documentaries", locale)}
-        />
-        <SourcesSection
-          sources={sources}
-          title={label("sources", locale)}
-        />
+        <div className="mx-auto max-w-[1120px] flex gap-0">
+          <aside className="hidden lg:block w-[200px] shrink-0">
+            <nav className="sticky top-[84px] py-4 flex flex-col gap-[2px]">
+              {sidebarSections.map((s) => (
+                <a
+                  key={s.id}
+                  href={`#${s.id}`}
+                  className="flex items-center justify-between px-3 py-[9px] text-[12px] text-dim hover:text-text transition-colors group"
+                >
+                  <span className="group-hover:text-text">{s.label}</span>
+                  <span className="text-[10px] text-faint tabular-nums">
+                    {String(s.count).padStart(2, "0")}
+                  </span>
+                </a>
+              ))}
+            </nav>
+          </aside>
+
+          <div className="flex-1 min-w-0 px-6 lg:px-0 lg:pl-8 pb-24">
+            <ConceptsSection
+              concepts={concepts}
+              title={label("concepts", locale)}
+            />
+            <TraditionsSection
+              traditions={traditions}
+              title={label("traditions", locale)}
+            />
+            <AuthorsSection
+              authors={authors}
+              title={label("authors", locale)}
+            />
+            <WorksSection works={works} title={label("works", locale)} />
+            <PracticesSection
+              practices={practices}
+              title={label("practices", locale)}
+            />
+            <SymbolsSection
+              symbols={symbols}
+              title={label("symbols", locale)}
+            />
+            <DocumentariesSection
+              documentaries={documentaries}
+              title={label("documentaries", locale)}
+            />
+            <SourcesSection
+              sources={sources}
+              title={label("sources", locale)}
+            />
+          </div>
+        </div>
       </main>
       <Footer locale={locale} />
     </>

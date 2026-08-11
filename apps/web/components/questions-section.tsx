@@ -50,11 +50,11 @@ export function QuestionsSection({ questions, sectionTitle, locale }: QuestionsS
   }
 
   return (
-    <section className="section-container py-28" aria-labelledby="questions-heading">
+    <section className="section-container py-[100px]" aria-labelledby="questions-heading">
       <ScrollReveal>
         <p
           id="questions-heading"
-          className="mb-16 text-sm font-medium tracking-[0.3em] uppercase text-gold"
+          className="mb-[52px] text-xs font-medium tracking-[0.3em] uppercase text-gold"
         >
           {sectionTitle}
         </p>
@@ -66,32 +66,32 @@ export function QuestionsSection({ questions, sectionTitle, locale }: QuestionsS
           if (!items || items.length === 0) return null;
           return (
             <ScrollReveal key={cat} stagger={Math.min(catIdx + 1, 4)}>
-              <div>
-                <h3 className="mb-6 font-display text-xl font-medium text-text/40 md:text-2xl">
-                  {labels[cat]}
-                </h3>
-                <ul className="m-0 list-none space-y-4 p-0">
+              <div className="flex flex-col gap-5">
+                <div className="flex items-center gap-3">
+                  <h3 className="m-0 font-display text-[26px] font-medium text-text/40">
+                    {labels[cat]}
+                  </h3>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+                <div className="flex flex-col gap-[15px]">
                   {items.map((q) => (
-                    <li key={q.id}>
-                      <Link href={`/question/${q.slug}`} className="group block">
-                        <p
-                          className="font-display text-lg font-medium leading-snug tracking-[0.02em] text-text transition-colors duration-300 group-hover:text-gold md:text-xl"
-                          lang={q.is_fallback ? "en" : undefined}
-                        >
-                          {q.title}
-                          {q.is_fallback && (
-                            <span
-                              className="ms-2 inline-block rounded-[8px] border border-border px-1.5 py-0.5 align-middle text-[0.55rem] uppercase tracking-wider text-muted"
-                              title="Not yet translated"
-                            >
-                              EN
-                            </span>
-                          )}
-                        </p>
-                      </Link>
-                    </li>
+                    <Link
+                      key={q.id}
+                      href={`/question/${q.slug}`}
+                      className="group flex items-baseline gap-[11px] no-underline"
+                    >
+                      <span className="shrink-0 w-[5px] h-[5px] rounded-full bg-gold/45 -translate-y-[3px]" />
+                      <span className="font-display text-[21px] font-medium leading-[1.35] tracking-[0.02em] text-text transition-colors group-hover:text-gold">
+                        {q.title}
+                      </span>
+                      {q.is_fallback && (
+                        <span className="text-[8.5px] font-medium tracking-[0.1em] uppercase text-muted border border-border rounded-lg px-1.5 py-0.5">
+                          EN
+                        </span>
+                      )}
+                    </Link>
                   ))}
-                </ul>
+                </div>
               </div>
             </ScrollReveal>
           );

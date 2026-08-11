@@ -6,54 +6,45 @@ interface SymbolsSectionProps {
   title: string;
 }
 
+const ICON = (
+  <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#C6A66B" strokeWidth="1.1">
+    <path d="M8 1l1.8 4.2H15l-3.8 3 1.6 4.8L8 10.2 3.2 13l1.6-4.8L1 5.2h5.2z"/>
+  </svg>
+);
+
 export function SymbolsSection({ symbols, title }: SymbolsSectionProps) {
   if (symbols.length === 0) return null;
 
   return (
-    <section
-      className="bg-accent/10 px-6 py-16"
-      aria-labelledby="symbols-heading"
-    >
-      <div className="mx-auto max-w-4xl">
-        <SectionHeading
-          id="symbols-heading"
-          title={title}
-          count={symbols.length}
-        />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {symbols.map((s) => (
-            <div
-              key={s.id}
-              className="rounded-sm border border-border bg-background/60 p-6 text-center transition-colors hover:border-gold/30"
+    <section id="s6" className="scroll-mt-[84px] mt-[68px]" aria-labelledby="symbols-heading">
+      <SectionHeading id="symbols-heading" title={title} count={symbols.length} icon={ICON} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border border-border" style={{ gap: "1px", background: "#232D39" }}>
+        {symbols.map((s) => (
+          <div
+            key={s.id}
+            className="bg-background p-[22px_24px] flex flex-col items-center gap-3 text-center transition-colors hover:bg-surface"
+          >
+            {s.unicode_char && (
+              <span className="text-[42px] leading-none" role="img" aria-label={s.name}>
+                {s.unicode_char}
+              </span>
+            )}
+            <span
+              className="font-display text-[19px]"
+              lang={s.is_fallback ? "en" : undefined}
             >
-              {s.unicode_char && (
-                <span
-                  className="mb-3 block text-4xl"
-                  role="img"
-                  aria-label={s.name}
-                >
-                  {s.unicode_char}
-                </span>
-              )}
-              <h3
-                className="font-display text-lg text-text"
-                lang={s.is_fallback ? "en" : undefined}
-              >
-                {s.name}
-              </h3>
-              {s.tradition_name && (
-                <span className="mt-1 inline-block text-[0.65rem] font-medium uppercase tracking-wider text-gold/60">
-                  {s.tradition_name}
-                </span>
-              )}
-              {s.summary && (
-                <p className="mt-3 text-sm leading-relaxed text-muted">
-                  {s.summary}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
+              {s.name}
+            </span>
+            {s.tradition_name && (
+              <span className="text-[9.5px] font-medium tracking-[0.14em] uppercase text-gold/60">
+                {s.tradition_name}
+              </span>
+            )}
+            {s.summary && (
+              <span className="text-[13px] leading-[1.7] text-muted">{s.summary}</span>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );

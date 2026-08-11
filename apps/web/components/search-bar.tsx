@@ -7,13 +7,13 @@ interface SearchBarProps {
   locale: string;
   placeholder: string;
   suggestions: Array<{ slug: string; title: string }>;
+  searchLabel?: string;
 }
 
-export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) {
+export function SearchBar({ locale, placeholder, suggestions, searchLabel = "Search" }: SearchBarProps) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const filtered = query.trim()
@@ -29,7 +29,6 @@ export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) 
         !containerRef.current.contains(e.target as Node)
       ) {
         setShowSuggestions(false);
-        setIsFocused(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -38,10 +37,8 @@ export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) 
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (query.trim()) {
-      router.push(`/${locale}/search?q=${encodeURIComponent(query.trim())}`);
-      setShowSuggestions(false);
-    }
+    router.push(`/${locale}/search?q=${encodeURIComponent(query.trim())}`);
+    setShowSuggestions(false);
   }
 
   function navigateToQuestion(slug: string) {
@@ -50,9 +47,13 @@ export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) 
   }
 
   return (
-    <div ref={containerRef} className="relative mx-auto w-full max-w-3xl">
+    <div ref={containerRef} className="relative mx-auto w-full max-w-[640px]">
       <form onSubmit={handleSubmit} role="search">
-        <div className="relative">
+        <div className="flex items-center gap-[14px] h-14 px-5 pe-2 border border-border bg-surface">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#5F6B79" strokeWidth="1.2" className="shrink-0">
+            <circle cx="7" cy="7" r="4.4"/>
+            <path d="M10.3 10.3 14 14"/>
+          </svg>
           <input
             type="search"
             value={query}
@@ -60,33 +61,19 @@ export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) 
               setQuery(e.target.value);
               setShowSuggestions(true);
             }}
-            onFocus={() => {
-              setShowSuggestions(true);
-              setIsFocused(true);
-            }}
+            onFocus={() => setShowSuggestions(true)}
             placeholder={placeholder}
-            className="w-full rounded-[20px] border border-border bg-surface px-7 py-5 pe-14 font-display text-lg text-text placeholder:text-muted/40 transition-all duration-500 focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/20"
+            className="flex-1 bg-transparent border-none outline-none text-text font-display text-[19px]"
             aria-label={placeholder}
             autoComplete="off"
           />
           <button
             type="submit"
-            className="absolute end-5 top-1/2 -translate-y-1/2 text-muted/40 transition-colors duration-300 hover:text-gold"
-            aria-label="Search"
+            className="h-10 px-[22px] bg-gold text-background font-semibold text-[11px] tracking-[0.14em] uppercase flex items-center gap-2 cursor-pointer hover:bg-gold-hover transition-colors"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
+            {searchLabel}
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#090B0F" strokeWidth="1.5">
+              <path d="M3 8h10M9 4l4 4-4 4"/>
             </svg>
           </button>
         </div>
@@ -94,34 +81,20 @@ export function SearchBar({ locale, placeholder, suggestions }: SearchBarProps) 
 
       {showSuggestions && filtered.length > 0 && (
         <ul
-          className="absolute z-40 mt-3 w-full rounded-[16px] border border-border bg-card shadow-xl shadow-black/40"
+          className="absolute z-40 mt-1 w-full border border-border bg-surface shadow-xl shadow-black/40"
           role="listbox"
         >
           {filtered.slice(0, 6).map((s) => (
             <li key={s.slug} role="option" aria-selected={false}>
               <button
                 onClick={() => navigateToQuestion(s.slug)}
-                className="w-full px-7 py-4 text-start font-display text-base text-text/70 transition-colors duration-200 first:rounded-t-[16px] last:rounded-b-[16px] hover:bg-surface hover:text-text"
+                className="w-full px-5 py-3 text-start font-display text-base text-text/70 transition-colors hover:bg-background hover:text-text"
               >
                 {s.title}
               </button>
             </li>
           ))}
         </ul>
-      )}
-
-      {isFocused && !query.trim() && !showSuggestions && (
-        <div className="mt-5 flex flex-wrap justify-center gap-2">
-          {suggestions.slice(0, 4).map((s) => (
-            <button
-              key={s.slug}
-              onClick={() => navigateToQuestion(s.slug)}
-              className="rounded-[16px] border border-border px-4 py-2 text-xs text-muted/60 transition-all duration-300 hover:border-gold/30 hover:text-text"
-            >
-              {s.title}
-            </button>
-          ))}
-        </div>
       )}
     </div>
   );

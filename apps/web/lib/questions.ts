@@ -537,6 +537,100 @@ export async function searchQuestions(
   );
 }
 
+export interface GraphNode {
+  id: string;
+  slug: string;
+  type: "question" | "tradition" | "concept";
+  name: string;
+  summary: string;
+  extra: string | null;
+}
+
+export interface GraphEdge {
+  from_id: string;
+  to_id: string;
+}
+
+export async function getGraphData(
+  locale: string,
+): Promise<{ nodes: GraphNode[]; edges: GraphEdge[] }> {
+  const [questions, traditions, concepts, edges] = await Promise.all([
+    safeQuery(
+      () =>
+        sql<GraphNode[]>`
+          SELECT
+            q.id, q.slug, 'question' AS type,
+            COALESCE(t.value, te.value, q.slug) AS name,
+            COALESCE(s.value, se.value, '') AS summary,
+            NULL AS extra
+          FROM infi_question q
+          LEFT JOIN infi_translation t ON t.entity_type='question' AND t.entity_id=q.id AND t.locale=${locale} AND t.field='title'
+          LEFT JOIN infi_translation te ON te.entity_type='question' AND te.entity_id=q.id AND te.locale='en' AND te.field='title'
+          LEFT JOIN infi_translation s ON s.entity_type='question' AND s.entity_id=q.id AND s.locale=${locale} AND s.field='summary'
+          LEFT JOIN infi_translation se ON se.entity_type='question' AND se.entity_id=q.id AND se.locale='en' AND se.field='summary'
+          WHERE q.status='published'
+          ORDER BY q.sort_order
+          LIMIT 20
+        `,
+      [],
+    ),
+    safeQuery(
+      () =>
+        sql<GraphNode[]>`
+          SELECT
+            t.id, t.slug, 'tradition' AS type,
+            COALESCE(n.value, ne.value, t.slug) AS name,
+            COALESCE(s.value, se.value, '') AS summary,
+            COALESCE(c.value, ce.value) AS extra
+          FROM infi_tradition t
+          LEFT JOIN infi_translation n ON n.entity_type='tradition' AND n.entity_id=t.id AND n.locale=${locale} AND n.field='name'
+          LEFT JOIN infi_translation ne ON ne.entity_type='tradition' AND ne.entity_id=t.id AND ne.locale='en' AND ne.field='name'
+          LEFT JOIN infi_translation s ON s.entity_type='tradition' AND s.entity_id=t.id AND s.locale=${locale} AND s.field='summary'
+          LEFT JOIN infi_translation se ON se.entity_type='tradition' AND se.entity_id=t.id AND se.locale='en' AND se.field='summary'
+          LEFT JOIN infi_translation c ON c.entity_type='collection' AND c.entity_id=t.collection_id AND c.locale=${locale} AND c.field='name'
+          LEFT JOIN infi_translation ce ON ce.entity_type='collection' AND ce.entity_id=t.collection_id AND ce.locale='en' AND ce.field='name'
+          WHERE t.status='published'
+          LIMIT 40
+        `,
+      [],
+    ),
+    safeQuery(
+      () =>
+        sql<GraphNode[]>`
+          SELECT
+            c.id, c.slug, 'concept' AS type,
+            COALESCE(n.value, ne.value, c.slug) AS name,
+            COALESCE(s.value, se.value, '') AS summary,
+            c.original_script AS extra
+          FROM infi_concept c
+          LEFT JOIN infi_translation n ON n.entity_type='concept' AND n.entity_id=c.id AND n.locale=${locale} AND n.field='name'
+          LEFT JOIN infi_translation ne ON ne.entity_type='concept' AND ne.entity_id=c.id AND ne.locale='en' AND ne.field='name'
+          LEFT JOIN infi_translation s ON s.entity_type='concept' AND s.entity_id=c.id AND s.locale=${locale} AND s.field='summary'
+          LEFT JOIN infi_translation se ON se.entity_type='concept' AND se.entity_id=c.id AND se.locale='en' AND se.field='summary'
+          WHERE c.status='published'
+          LIMIT 60
+        `,
+      [],
+    ),
+    safeQuery(
+      () =>
+        sql<GraphEdge[]>`
+          SELECT DISTINCT from_id, to_id
+          FROM infi_edge
+          WHERE approved_at IS NOT NULL
+          LIMIT 200
+        `,
+      [],
+    ),
+  ]);
+
+  const allNodes = [...questions, ...traditions, ...concepts];
+  const nodeIds = new Set(allNodes.map((n) => n.id));
+  const validEdges = edges.filter((e) => nodeIds.has(e.from_id) && nodeIds.has(e.to_id));
+
+  return { nodes: allNodes, edges: validEdges };
+}
+
 export async function getFeaturedQuestions(
   locale: string,
 ): Promise<SearchResult[]> {

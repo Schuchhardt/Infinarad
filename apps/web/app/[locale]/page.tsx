@@ -2,7 +2,6 @@ export const dynamic = "force-dynamic";
 
 import { Hero } from "@/components/hero";
 import { QuestionsSection } from "@/components/questions-section";
-import { HowItWorks } from "@/components/how-it-works";
 import { CollectionsSection } from "@/components/collections-section";
 import { TheRule } from "@/components/the-rule";
 import { Nav } from "@/components/nav";
@@ -10,12 +9,10 @@ import { Footer } from "@/components/footer";
 import { SearchBar } from "@/components/search-bar";
 import { FeaturedQuestion } from "@/components/featured-question";
 import { LiveStats } from "@/components/live-stats";
-import { Timeline } from "@/components/timeline";
 import { KnowledgeGraphPreview } from "@/components/knowledge-graph-preview";
 import {
   getQuestions,
   getCollections,
-  getHowItWorksTitle,
   getActiveLocales,
   getPlatformStats,
   getFeaturedQuestionStats,
@@ -48,6 +45,19 @@ const DESCRIPTORS: Record<string, string> = {
   he: "האטלס החי של השאלות הגדולות של האנושות",
 };
 
+const SEARCH_LABELS: Record<string, string> = {
+  en: "Search",
+  es: "Buscar",
+  pt: "Buscar",
+  fr: "Chercher",
+  de: "Suchen",
+  ar: "بحث",
+  hi: "खोज",
+  zh: "搜索",
+  ja: "検索",
+  he: "חיפוש",
+};
+
 type Props = {
   params: Promise<{ locale: string }>;
 };
@@ -60,11 +70,10 @@ export default async function LandingPage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: "landing" });
   const tc = await getTranslations({ locale, namespace: "common" });
 
-  const [questions, collections, howTitle, activeLocales, stats, featured] =
+  const [questions, collections, activeLocales, stats, featured] =
     await Promise.all([
       getQuestions(locale),
       getCollections(locale),
-      getHowItWorksTitle(locale),
       getActiveLocales(),
       getPlatformStats(),
       getFeaturedQuestionStats("q_DEATH", locale),
@@ -91,13 +100,13 @@ export default async function LandingPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Nav locale={locale} locales={activeLocales} />
-      <main>
+      <main className="pt-16">
         <Hero
           locale={locale}
           descriptor={DESCRIPTORS[locale] ?? DESCRIPTORS["en"]!}
         />
 
-        <section className="section-container py-16">
+        <section className="section-container pb-[84px]">
           <SearchBar
             locale={locale}
             placeholder={SEARCH_PLACEHOLDERS[locale] ?? SEARCH_PLACEHOLDERS["en"]!}
@@ -105,6 +114,7 @@ export default async function LandingPage({ params }: Props) {
               slug: q.slug,
               title: q.title,
             }))}
+            searchLabel={SEARCH_LABELS[locale] ?? SEARCH_LABELS["en"]!}
           />
         </section>
 
@@ -129,8 +139,6 @@ export default async function LandingPage({ params }: Props) {
 
         <KnowledgeGraphPreview locale={locale} />
 
-        <Timeline locale={locale} />
-
         <LiveStats
           locale={locale}
           traditions={stats.traditions}
@@ -138,8 +146,6 @@ export default async function LandingPage({ params }: Props) {
           sources={stats.sources}
           authors={stats.authors}
         />
-
-        <HowItWorks sectionTitle={howTitle} locale={locale} />
 
         <QuestionsSection
           questions={questions}
