@@ -21,15 +21,16 @@ export function Footer({ locale }: FooterProps) {
   const tagline = TAGLINES[locale] ?? TAGLINES["en"]!;
 
   return (
-    <footer className="border-t border-border px-8 lg:px-[120px] py-[30px] flex items-center gap-5 flex-wrap">
+    <footer className="flex flex-wrap items-center gap-3 border-t border-border px-5 py-7 sm:gap-5 sm:px-8 sm:py-[30px] lg:px-[120px]">
       <Image
         src="/logo/infinarad-logo_transparent.png"
         alt="Infinarad"
-        width={220}
-        height={62}
-        className="h-auto w-[110px] object-contain opacity-50"
+        width={488}
+        height={444}
+        sizes="56px"
+        className="h-11 w-auto object-contain opacity-50 sm:h-14"
       />
-      <span className="font-display text-[15px] text-dim italic">
+      <span className="font-display text-[13px] italic leading-snug text-dim sm:text-[15px]">
         {tagline}
       </span>
     </footer>

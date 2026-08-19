@@ -30,11 +30,11 @@ export function CollectionsSection({
   locale,
 }: CollectionsSectionProps) {
   return (
-    <section className="section-container pb-[100px]" aria-labelledby="collections-heading">
+    <section className="section-container pb-16 sm:pb-20 lg:pb-[100px]" aria-labelledby="collections-heading">
       <ScrollReveal>
         <p
           id="collections-heading"
-          className="mb-9 flex items-center gap-[10px] text-xs font-medium tracking-[0.3em] uppercase text-gold"
+          className="mb-6 flex items-center gap-[10px] text-[11px] font-medium tracking-[0.24em] uppercase text-gold sm:mb-9 sm:text-xs sm:tracking-[0.3em]"
         >
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#C6A66B" strokeWidth="1.1">
             <rect x="2.2" y="2.2" width="5" height="5"/>
@@ -52,14 +52,14 @@ export function CollectionsSection({
       >
         {collections.map((col, i) => (
           <ScrollReveal key={col.id} stagger={Math.min(i + 1, 5)}>
-            <div className="bg-background p-6 flex flex-col gap-[10px] cursor-pointer transition-colors hover:bg-surface">
-              <div className="w-[26px] h-[26px] rounded-full border border-gold/40 flex items-center justify-center">
+            <div className="flex h-full cursor-pointer flex-col gap-2 bg-background p-4 transition-colors hover:bg-surface sm:gap-[10px] sm:p-6">
+              <div className="flex h-[22px] w-[22px] items-center justify-center rounded-full border border-gold/40 sm:h-[26px] sm:w-[26px]">
                 <div className="w-2 h-2 rounded-full bg-gold/50" />
               </div>
-              <span className="font-display text-[22px] leading-[1.2]">
+              <span className="font-display text-[17px] leading-[1.25] sm:text-[19px] lg:text-[22px] lg:leading-[1.2]">
                 {col.name}
               </span>
-              <span className="text-[10px] font-medium tracking-[0.14em] uppercase text-dim">
+              <span className="text-[9.5px] font-medium tracking-[0.1em] uppercase text-dim sm:text-[10px] sm:tracking-[0.14em]">
                 {pluralizeTraditions(col.tradition_count, locale)}
               </span>
             </div>

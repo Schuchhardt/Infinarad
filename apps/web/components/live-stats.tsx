@@ -60,23 +60,23 @@ export function LiveStats({ locale, traditions, concepts, sources, authors }: Li
 
   return (
     <section
-      className="border-t border-b border-border bg-surface/50 py-14"
+      className="border-t border-b border-border bg-surface/50 py-10 sm:py-14"
       aria-label="Statistics"
     >
-      <div className="section-container flex justify-between gap-10 flex-wrap">
+      <div className="section-container grid grid-cols-2 gap-x-4 gap-y-8 sm:flex sm:flex-wrap sm:justify-between sm:gap-10">
         {stats.filter((s) => s.value > 0).map((s) => (
-          <div key={s.label} className="flex items-center gap-4">
-            <div className="w-[34px] h-[34px] shrink-0 border border-border flex items-center justify-center">
+          <div key={s.label} className="flex min-w-0 items-center gap-3 sm:gap-4">
+            <div className="flex h-[28px] w-[28px] shrink-0 items-center justify-center border border-border sm:h-[34px] sm:w-[34px]">
               <div
                 className="w-[9px] h-[9px] rounded-full bg-gold/50"
                 style={{ animation: "pulse-glow 3.5s ease-in-out infinite", animationDelay: s.delay }}
               />
             </div>
-            <div className="flex flex-col gap-[7px]">
-              <span className="font-display text-[46px] leading-none tabular-nums">
+            <div className="flex min-w-0 flex-col gap-[6px] sm:gap-[7px]">
+              <span className="font-display text-[30px] leading-none tabular-nums sm:text-[38px] lg:text-[46px]">
                 {fmt(s.value)}
               </span>
-              <span className="text-[10.5px] font-medium tracking-[0.2em] uppercase text-muted">
+              <span className="text-[9.5px] font-medium tracking-[0.14em] uppercase text-muted sm:text-[10.5px] sm:tracking-[0.2em]">
                 {s.label}
               </span>
             </div>

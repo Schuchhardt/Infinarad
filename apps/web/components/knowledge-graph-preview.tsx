@@ -60,20 +60,20 @@ export function KnowledgeGraphPreview({ locale }: KnowledgeGraphPreviewProps) {
   const router = useRouter();
 
   return (
-    <section className="section-container pb-[100px] text-center" aria-label={l.title}>
-      <p className="m-0 mb-[14px] text-xs font-medium tracking-[0.3em] uppercase text-gold">
+    <section className="section-container pb-16 text-center sm:pb-20 lg:pb-[100px]" aria-label={l.title}>
+      <p className="m-0 mb-3 text-[11px] font-medium tracking-[0.24em] uppercase text-gold sm:mb-[14px] sm:text-xs sm:tracking-[0.3em]">
         {l.title}
       </p>
-      <p className="m-0 mb-10 text-[13px] text-muted">
+      <p className="m-0 mb-7 text-[13px] leading-relaxed text-muted sm:mb-10">
         {l.desc}
       </p>
 
       <div
-        className="max-w-[760px] mx-auto border border-border p-[34px] cursor-pointer transition-colors hover:border-gold/30"
+        className="mx-auto max-w-[760px] cursor-pointer border border-border p-3 transition-colors hover:border-gold/30 sm:p-6 lg:p-[34px]"
         style={{ background: "rgba(23,29,38,0.5)" }}
         onClick={() => router.push(`/${locale}/search`)}
       >
-        <svg viewBox="0 0 100 100" className="w-full h-auto block">
+        <svg viewBox="0 12 100 78" className="block h-auto w-full" role="img" aria-label={l.desc}>
           {EDGES.map(([a, b], i) => {
             const na = NODES[a]!;
             const nb = NODES[b]!;
@@ -109,8 +109,8 @@ export function KnowledgeGraphPreview({ locale }: KnowledgeGraphPreviewProps) {
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fill="rgba(243,242,238,0.55)"
-                fontSize="2.2"
                 fontFamily="var(--font-display)"
+                className="graph-label"
               >
                 {node.label}
               </text>

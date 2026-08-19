@@ -67,7 +67,7 @@ export function Hero({ locale, descriptor }: HeroProps) {
   }, []);
 
   return (
-    <section className="relative overflow-hidden pt-[104px] pb-[88px] text-center px-[60px]">
+    <section className="relative overflow-hidden px-5 pt-14 pb-16 text-center sm:px-10 sm:pt-[88px] sm:pb-20 lg:px-[60px] lg:pt-[104px] lg:pb-[88px]">
       {/* Background gradients */}
       <div
         className="absolute pointer-events-none"
@@ -89,59 +89,60 @@ export function Hero({ locale, descriptor }: HeroProps) {
       ))}
 
       {/* Spinning logo orb */}
-      <div className="relative w-[184px] h-[184px] mx-auto mb-10 animate-fade-in">
+      <div className="relative mx-auto mb-8 h-[124px] w-[124px] animate-fade-in sm:mb-10 sm:h-[152px] sm:w-[152px] lg:h-[184px] lg:w-[184px]">
         <div
           className="absolute inset-0 rounded-full"
           style={{ border: "1px solid rgba(198,166,107,0.16)", animation: "spin-slow 60s linear infinite" }}
         />
         <div
           className="absolute rounded-full"
-          style={{ inset: "20px", border: "1px dashed rgba(80,108,134,0.3)", animation: "spin-reverse 44s linear infinite" }}
+          style={{ inset: "13%", border: "1px dashed rgba(80,108,134,0.3)", animation: "spin-reverse 44s linear infinite" }}
         />
         <div
           className="absolute rounded-full"
-          style={{ inset: "12px", border: "1px solid rgba(198,166,107,0.2)", animation: "ring-out 5.5s ease-out infinite" }}
+          style={{ inset: "7%", border: "1px solid rgba(198,166,107,0.2)", animation: "ring-out 5.5s ease-out infinite" }}
         />
         <Image
           src="/logo/infinarad_yellow-transparent.png"
           alt=""
-          width={116}
-          height={116}
-          className="absolute object-contain opacity-90"
-          style={{ inset: "34px", width: "116px", height: "116px", animation: "spin-slow 220s linear infinite" }}
+          width={184}
+          height={184}
+          sizes="184px"
+          className="absolute inset-[22px] h-auto w-[calc(100%-44px)] object-contain opacity-90 sm:inset-[28px] sm:w-[calc(100%-56px)] lg:inset-[34px] lg:w-[calc(100%-68px)]"
+          style={{ animation: "spin-slow 220s linear infinite" }}
         />
       </div>
 
       {/* Content */}
       <div className="relative max-w-[860px] mx-auto flex flex-col items-center">
         <p
-          className="mb-[22px] text-[13px] font-medium tracking-[0.3em] uppercase text-gold animate-fade-up"
+          className="mb-4 text-[11px] font-medium tracking-[0.28em] uppercase text-gold animate-fade-up sm:mb-[22px] sm:text-[13px] sm:tracking-[0.3em]"
         >
           Infinarad
         </p>
 
         <p
-          className="mb-[52px] font-display text-[19px] font-medium tracking-[0.1em] text-text/50 animate-fade-up"
+          className="mb-9 font-display text-[15px] font-medium tracking-[0.08em] text-text/50 animate-fade-up sm:mb-[52px] sm:text-[19px] sm:tracking-[0.1em]"
           style={{ animationDelay: "120ms" }}
         >
           {descriptor}
         </p>
 
         <p
-          className="m-0 mb-3 font-display text-[40px] font-medium leading-[1.4] tracking-[0.04em] text-text/85 animate-fade-up"
+          className="m-0 mb-2 font-display text-[26px] font-medium leading-[1.35] tracking-[0.02em] text-text/85 animate-fade-up sm:mb-3 sm:text-[32px] sm:tracking-[0.04em] lg:text-[40px] lg:leading-[1.4]"
           style={{ animationDelay: "240ms", textWrap: "pretty" }}
         >
           {copy.line1}
         </p>
         <p
-          className="m-0 mb-9 font-display text-[40px] font-medium leading-[1.4] tracking-[0.04em] animate-fade-up"
+          className="m-0 mb-7 font-display text-[26px] font-medium leading-[1.35] tracking-[0.02em] animate-fade-up sm:mb-9 sm:text-[32px] sm:tracking-[0.04em] lg:text-[40px] lg:leading-[1.4]"
           style={{ animationDelay: "340ms", textWrap: "pretty" }}
         >
           {copy.line2}
         </p>
 
         {/* Sweep line */}
-        <div className="relative w-24 h-px bg-gold/25 mb-9 overflow-hidden">
+        <div className="relative mb-7 h-px w-20 overflow-hidden bg-gold/25 sm:mb-9 sm:w-24">
           <div
             className="absolute top-0 left-0 h-px bg-gold"
             style={{ width: "40%", animation: "sweep 4s ease-in-out infinite" }}
@@ -149,7 +150,7 @@ export function Hero({ locale, descriptor }: HeroProps) {
         </div>
 
         <p
-          className="m-0 mb-[60px] font-display text-[21px] font-medium tracking-[0.04em] text-text/60 animate-fade-up"
+          className="m-0 mb-10 font-display text-[16px] font-medium leading-[1.5] tracking-[0.02em] text-text/60 animate-fade-up sm:mb-[60px] sm:text-[21px] sm:tracking-[0.04em]"
           style={{ animationDelay: "460ms" }}
         >
           {copy.line3}
@@ -158,7 +159,7 @@ export function Hero({ locale, descriptor }: HeroProps) {
         {/* Script rotation */}
         <p
           key={`sl${scriptIdx}`}
-          className="m-0 font-display text-[26px] leading-[1.3] text-text/25 min-h-[36px] animate-fade-in"
+          className="m-0 min-h-[52px] font-display text-[19px] leading-[1.35] text-text/25 animate-fade-in sm:min-h-[36px] sm:text-[26px] sm:leading-[1.3]"
           dir={sc.dir}
         >
           {sc.text}
