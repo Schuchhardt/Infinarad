@@ -106,7 +106,7 @@ export default async function LandingPage({ params }: Props) {
           descriptor={DESCRIPTORS[locale] ?? DESCRIPTORS["en"]!}
         />
 
-        <section className="section-container pb-[84px]">
+        <section className="section-container pb-14 sm:pb-16 lg:pb-[84px]">
           <SearchBar
             locale={locale}
             placeholder={SEARCH_PLACEHOLDERS[locale] ?? SEARCH_PLACEHOLDERS["en"]!}

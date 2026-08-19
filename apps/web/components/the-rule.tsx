@@ -22,7 +22,7 @@ export function TheRule({ locale }: TheRuleProps) {
 
   return (
     <section
-      className="relative overflow-hidden bg-surface/60 py-[132px] text-center"
+      className="relative overflow-hidden bg-surface/60 py-20 text-center sm:py-28 lg:py-[132px]"
       aria-labelledby="rule-heading"
     >
       <div
@@ -33,25 +33,25 @@ export function TheRule({ locale }: TheRuleProps) {
       <ScrollReveal className="relative z-10">
         <div className="section-container flex flex-col items-center">
           {/* Animated orb */}
-          <div className="relative w-[52px] h-[52px] mb-11">
+          <div className="relative mb-8 h-[42px] w-[42px] sm:mb-11 sm:h-[52px] sm:w-[52px]">
             <div
               className="absolute inset-0 rounded-full"
               style={{ border: "1px solid rgba(198,166,107,0.35)", animation: "ring-out 4.5s ease-out infinite" }}
             />
-            <div className="absolute rounded-full bg-gold" style={{ inset: "20px" }} />
+            <div className="absolute rounded-full bg-gold" style={{ inset: "38%" }} />
           </div>
 
           <h2
             id="rule-heading"
-            className="m-0 font-display text-5xl font-medium leading-[1.14] tracking-[0.04em]"
+            className="m-0 font-display text-[28px] font-medium leading-[1.25] tracking-[0.02em] sm:text-[38px] lg:text-5xl lg:leading-[1.14] lg:tracking-[0.04em]"
             style={{ textWrap: "pretty" }}
           >
             {c.title}
           </h2>
 
-          <div className="w-16 h-px bg-gold/30 my-8" />
+          <div className="my-6 h-px w-14 bg-gold/30 sm:my-8 sm:w-16" />
 
-          <p className="m-0 max-w-[560px] text-[15px] leading-[1.75] text-muted">
+          <p className="m-0 max-w-[560px] text-[14px] leading-[1.7] text-muted sm:text-[15px] sm:leading-[1.75]">
             {c.body}
           </p>
         </div>

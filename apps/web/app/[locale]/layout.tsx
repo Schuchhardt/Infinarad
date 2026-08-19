@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Syne, Spectral } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
@@ -73,6 +73,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   };
 }
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Permite hacer zoom: bloquearlo es una barrera de accesibilidad en móvil
+  maximumScale: 5,
+  viewportFit: "cover",
+  // Espeja --color-page-bg de globals.css: la barra del navegador móvil sólo
+  // acepta un literal, no una variable CSS
+  themeColor: "#06070A",
+};
 
 const RTL_LOCALES = new Set(["ar", "he"]);
 

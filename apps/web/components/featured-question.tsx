@@ -55,7 +55,7 @@ export function FeaturedQuestion({
   if (stats.length === 0) return null;
 
   return (
-    <section className="section-container pb-[100px]" aria-labelledby="featured-heading">
+    <section className="section-container pb-16 sm:pb-20 lg:pb-[100px]" aria-labelledby="featured-heading">
       <ScrollReveal>
         <Link
           href={`/question/${slug}`}
@@ -69,10 +69,10 @@ export function FeaturedQuestion({
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-w-[320px] p-[52px_56px] flex flex-col gap-[22px] justify-center">
+            <div className="flex min-w-0 flex-1 flex-col justify-center gap-4 p-6 sm:gap-[22px] sm:p-10 lg:p-[52px_56px]">
               <span
                 id="featured-heading"
-                className="flex items-center gap-[9px] text-[11px] font-medium tracking-[0.3em] uppercase text-gold"
+                className="flex items-center gap-[9px] text-[10px] font-medium tracking-[0.24em] uppercase text-gold sm:text-[11px] sm:tracking-[0.3em]"
               >
                 <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#C6A66B" strokeWidth="1.1">
                   <path d="M8 2.2l1.7 3.9 4.1.4-3.1 2.8.9 4.1L8 11.3l-3.6 2.1.9-4.1L2.2 6.5l4.1-.4z"/>
@@ -80,21 +80,21 @@ export function FeaturedQuestion({
                 {l.featured}
               </span>
 
-              <h2 className="m-0 font-display font-normal text-[46px] leading-[1.14] tracking-[0.01em] text-text" style={{ textWrap: "pretty" }}>
+              <h2 className="m-0 font-display text-[28px] font-normal leading-[1.2] tracking-[0.01em] text-text sm:text-[36px] lg:text-[46px] lg:leading-[1.14]" style={{ textWrap: "pretty" }}>
                 {title}
               </h2>
 
-              <span className="text-[11px] text-faint tracking-[0.04em]">
+              <span className="hidden break-all text-[10.5px] tracking-[0.04em] text-faint sm:inline sm:text-[11px]">
                 /{locale}/question/{slug}
               </span>
 
-              <div className="flex gap-[34px] flex-wrap pt-2">
+              <div className="grid grid-cols-3 gap-x-4 gap-y-5 pt-2 sm:flex sm:flex-wrap sm:gap-[34px]">
                 {stats.map((s) => (
-                  <div key={s.label} className="flex flex-col gap-[5px] min-w-[72px]">
-                    <span className="font-display text-[34px] leading-none text-gold tabular-nums">
+                  <div key={s.label} className="flex min-w-0 flex-col gap-[5px] sm:min-w-[72px]">
+                    <span className="font-display text-[26px] leading-none text-gold tabular-nums sm:text-[34px]">
                       {s.value}
                     </span>
-                    <span className="text-[10px] font-medium tracking-[0.16em] uppercase text-muted">
+                    <span className="text-[9.5px] font-medium tracking-[0.12em] uppercase text-muted sm:text-[10px] sm:tracking-[0.16em]">
                       {s.label}
                     </span>
                   </div>

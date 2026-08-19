@@ -50,17 +50,17 @@ export function QuestionsSection({ questions, sectionTitle, locale }: QuestionsS
   }
 
   return (
-    <section className="section-container py-[100px]" aria-labelledby="questions-heading">
+    <section className="section-container py-16 sm:py-20 lg:py-[100px]" aria-labelledby="questions-heading">
       <ScrollReveal>
         <p
           id="questions-heading"
-          className="mb-[52px] text-xs font-medium tracking-[0.3em] uppercase text-gold"
+          className="mb-8 text-[11px] font-medium tracking-[0.24em] uppercase text-gold sm:mb-[52px] sm:text-xs sm:tracking-[0.3em]"
         >
           {sectionTitle}
         </p>
       </ScrollReveal>
 
-      <div className="grid gap-14 md:grid-cols-2">
+      <div className="grid gap-10 sm:gap-14 md:grid-cols-2">
         {CATEGORY_ORDER.map((cat, catIdx) => {
           const items = grouped.get(cat);
           if (!items || items.length === 0) return null;
@@ -68,20 +68,20 @@ export function QuestionsSection({ questions, sectionTitle, locale }: QuestionsS
             <ScrollReveal key={cat} stagger={Math.min(catIdx + 1, 4)}>
               <div className="flex flex-col gap-5">
                 <div className="flex items-center gap-3">
-                  <h3 className="m-0 font-display text-[26px] font-medium text-text/40">
+                  <h3 className="m-0 font-display text-[21px] font-medium text-text/40 sm:text-[26px]">
                     {labels[cat]}
                   </h3>
                   <div className="flex-1 h-px bg-border" />
                 </div>
-                <div className="flex flex-col gap-[15px]">
+                <div className="flex flex-col gap-1">
                   {items.map((q) => (
                     <Link
                       key={q.id}
                       href={`/question/${q.slug}`}
-                      className="group flex items-baseline gap-[11px] no-underline"
+                      className="group flex min-h-[44px] items-baseline gap-[11px] py-1.5 no-underline sm:min-h-0 sm:py-0"
                     >
                       <span className="shrink-0 w-[5px] h-[5px] rounded-full bg-gold/45 -translate-y-[3px]" />
-                      <span className="font-display text-[21px] font-medium leading-[1.35] tracking-[0.02em] text-text transition-colors group-hover:text-gold">
+                      <span className="font-display text-[18px] font-medium leading-[1.4] tracking-[0.02em] text-text transition-colors group-hover:text-gold sm:text-[21px] sm:leading-[1.35]">
                         {q.title}
                       </span>
                       {q.is_fallback && (
