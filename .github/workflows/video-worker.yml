@@ -1,0 +1,41 @@
+# Runs the video pipeline worker on a schedule.
+#
+# Netlify's scheduled function (netlify/functions/video-worker.mts) is the
+# primary trigger; this workflow is the alternative for teams that would rather
+# run the worker with a long time budget outside the serverless timeout.
+#
+# Enable it by setting the repository variable VIDEO_WORKER_ENABLED to "true"
+# and adding the secrets below.
+name: video-worker
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: video-worker
+  cancel-in-progress: false
+
+jobs:
+  work:
+    if: vars.VIDEO_WORKER_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm video work --once --budget-ms 600000 --max-jobs 5
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          HF_CREDENTIALS: ${{ secrets.HF_CREDENTIALS }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
