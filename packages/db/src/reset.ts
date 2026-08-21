@@ -10,6 +10,7 @@ async function reset() {
 
     await sql`
       DROP TABLE IF EXISTS
+        infi_video_job_event, infi_video_asset, infi_video_shot, infi_video_job,
         infi_living_page_citation, infi_living_page, infi_documentary,
         infi_citation, infi_source, infi_changelog_entry, infi_suggestion,
         infi_revision, infi_translation, infi_slug_redirect, infi_embedding,
@@ -24,14 +25,15 @@ async function reset() {
         infi_entity_type, infi_publication_status, infi_relation_type,
         infi_source_kind, infi_license_kind, infi_verification_status,
         infi_translation_status, infi_changelog_kind, infi_actor_type,
-        infi_user_role, infi_text_direction
+        infi_user_role, infi_text_direction, infi_video_job_status,
+        infi_video_stage, infi_video_asset_kind, infi_video_asset_status
     `;
 
     await sql`
       DROP FUNCTION IF EXISTS
         infi_gen_prefixed_id(text), infi_immutable_unaccent(text),
         infi_edge_check_endpoints(), infi_source_set_quotable(),
-        infi_citation_check_max_words()
+        infi_citation_check_max_words(), infi_video_touch_updated_at()
     `;
 
     console.log("Reset complete.");

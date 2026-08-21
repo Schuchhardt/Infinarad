@@ -12,9 +12,12 @@
     "db:seed": "pnpm --filter @infinarad/db db:seed",
     "db:reset": "pnpm --filter @infinarad/db db:reset",
     "db:studio": "pnpm --filter @infinarad/db db:studio",
-    "research": "tsx scripts/research.ts"
+    "research": "tsx scripts/research.ts",
+    "video": "tsx scripts/video.ts",
+    "video:worker": "tsx scripts/video.ts work --watch"
   },
   "devDependencies": {
+    "tsx": "^4.23.4",
     "typescript": "^5.8.3",
     "vitest": "^3.2.1"
   }
