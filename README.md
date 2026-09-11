@@ -27,6 +27,7 @@ apps/
 packages/
   db/           # Database layer — Drizzle ORM, migrations, queries (@infinarad/db)
   i18n/         # Shared internationalisation utilities (@infinarad/i18n)
+  video/        # Automated video pipeline — script, narration, clips (@infinarad/video)
 ```
 
 ## Getting Started
@@ -54,7 +55,30 @@ pnpm db:migrate   # Run database migrations
 pnpm db:seed      # Seed the database
 pnpm db:reset     # Drop only Infinarad objects (infi_*) — NEVER the whole schema
 pnpm db:studio    # Open Drizzle Studio at port 54323
+
+pnpm research     # Generate a research brief as markdown
+pnpm video        # Video pipeline CLI (enqueue / work / status)
+pnpm video:worker # Run the pipeline worker in a watch loop
 ```
+
+## Video pipeline
+
+`POST /api/video/generate` turns a question in the graph into a cited,
+shot-by-shot script plus narration audio, a keyframe and a clip per shot. Runs
+are queued as `infi_video_job` rows and advanced by a worker, so the request
+returns immediately and every stage is resumable.
+
+```bash
+curl -X POST https://infinarad.com/api/video/generate \
+  -H "x-infinarad-token: $VIDEO_PIPELINE_TOKEN" \
+  -H "content-type: application/json" \
+  -d '{"question":"what-happens-after-death","tradition":"buddhism","locale":"es"}'
+```
+
+Nothing is published: each run appends an `infi_revision` to a draft
+documentary. See [docs/video-pipeline.md](docs/video-pipeline.md) for the
+endpoints, the stage machine, the validation rules and how to schedule the
+worker.
 
 ## Key Conventions
 

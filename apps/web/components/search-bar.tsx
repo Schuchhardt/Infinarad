@@ -48,9 +48,10 @@ export function SearchBar({ locale, placeholder, suggestions, searchLabel = "Sea
 
   return (
     <div ref={containerRef} className="relative mx-auto w-full max-w-[640px]">
+      {/* text-base (16px) es el mínimo en móvil: por debajo, iOS hace zoom al enfocar el input */}
       <form onSubmit={handleSubmit} role="search">
-        <div className="flex items-center gap-[14px] h-14 px-5 pe-2 border border-border bg-surface">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#5F6B79" strokeWidth="1.2" className="shrink-0">
+        <div className="flex h-[52px] items-center gap-[10px] border border-border bg-surface ps-4 pe-1.5 sm:h-14 sm:gap-[14px] sm:ps-5 sm:pe-2">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2" className="shrink-0 text-dim">
             <circle cx="7" cy="7" r="4.4"/>
             <path d="M10.3 10.3 14 14"/>
           </svg>
@@ -63,16 +64,17 @@ export function SearchBar({ locale, placeholder, suggestions, searchLabel = "Sea
             }}
             onFocus={() => setShowSuggestions(true)}
             placeholder={placeholder}
-            className="flex-1 bg-transparent border-none outline-none text-text font-display text-[19px]"
+            className="w-full min-w-0 flex-1 border-none bg-transparent font-display text-base text-text outline-none sm:text-[19px]"
             aria-label={placeholder}
             autoComplete="off"
           />
           <button
             type="submit"
-            className="h-10 px-[22px] bg-gold text-background font-semibold text-[11px] tracking-[0.14em] uppercase flex items-center gap-2 cursor-pointer hover:bg-gold-hover transition-colors"
+            aria-label={searchLabel}
+            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center gap-2 bg-gold text-[11px] font-semibold uppercase tracking-[0.14em] text-background transition-colors hover:bg-gold-hover sm:w-auto sm:px-[22px]"
           >
-            {searchLabel}
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#090B0F" strokeWidth="1.5">
+            <span className="hidden sm:inline">{searchLabel}</span>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M3 8h10M9 4l4 4-4 4"/>
             </svg>
           </button>
@@ -81,14 +83,14 @@ export function SearchBar({ locale, placeholder, suggestions, searchLabel = "Sea
 
       {showSuggestions && filtered.length > 0 && (
         <ul
-          className="absolute z-40 mt-1 w-full border border-border bg-surface shadow-xl shadow-black/40"
+          className="absolute z-40 mt-1 max-h-[46vh] w-full overflow-y-auto overscroll-contain border border-border bg-surface shadow-xl shadow-black/40"
           role="listbox"
         >
           {filtered.slice(0, 6).map((s) => (
             <li key={s.slug} role="option" aria-selected={false}>
               <button
                 onClick={() => navigateToQuestion(s.slug)}
-                className="w-full px-5 py-3 text-start font-display text-base text-text/70 transition-colors hover:bg-background hover:text-text"
+                className="min-h-[48px] w-full px-4 py-3 text-start font-display text-[15px] leading-snug text-text/70 transition-colors hover:bg-background hover:text-text sm:px-5 sm:text-base"
               >
                 {s.title}
               </button>

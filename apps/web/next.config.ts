@@ -4,7 +4,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@infinarad/db", "@infinarad/i18n"],
+  transpilePackages: ["@infinarad/db", "@infinarad/i18n", "@infinarad/video"],
 };
 
 export default withNextIntl(nextConfig);
